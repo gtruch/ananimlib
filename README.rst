@@ -1,57 +1,38 @@
-ManimLib2
-=========
 
-ManimLib2 is inspired by `ManimLib <https://github.com/3b1b/manim>`_ by Grant Sanderson of 3b1b.  ManimLib2 facilitates the creation of mathematically preceise animations through an easy to use API.
+============================================================
+Welcome to *An*\ other *Anim*\ ation *Lib*\ rary (AnAnimLib)
+============================================================
 
-For example, the following code draws a rectangle and spins it as it flies across the screen::
+AnAnimlib, was inspired by `ManimLib <https://github.com/3b1b/manim>`_ by Grant
+Sanderson of 3 Blue 1 Brown.  The aim of AnAnimlib is to facilitate the creation
+of mathematically preceise animations through an intuitive and extensible API.
 
-    # Create an instance of the animation engine
-    m = Manim.iManim("")
+The following code spins a square it as it moves across the canvas.
 
-    # Create an object to animate
-    rect = cmob.Rectangle([1,2])
-    rect.position = [-4,0]
+.. literalinclude:: ./code/quickstart_ex3.py
+  :start-after: # START
+  :end-before: # END
+  :linenos:
 
-    # Issue instructions to the renderer
-    m.run(
-        i.AddMobject('rect', rect),
-        m.runParallel(
-            i.MoveTo('rect',[4,0],duration=1.0),
-            i.Rotate('rect', 2*np.pi,duration=1.0)
-        )
-    )
+.. image:: quickstart_ex3.gif
+    :width: 95%
+    :align: center
 
-    # Play the rendered animation
-    m.play_movie()
+See the :ref:`Quickstart <quickstart>` for a quick introduction.
 
-Features
---------
+.. toctree::
+   :maxdepth: 2
+   :caption: Table of Contents
+   
+   quickstart
+   custom_mobjects
+   stuff
+   API Reference <manimlib2>
+   
+Indices and tables
+==================
 
-- Easy to use animation engine.
-- Easily extensible API making it simple to create additional animation objects and animation instructions.
-
-Installation
-------------
-
-Download the code and add the manimlib2 directory do your python path.  
-
-
-Set Up Development Environment 
-------------------------------
-
-#. Clone the repository to your local drive making note of the path.  
-
-#. Open an Anaconda Prompt and navigate to the manimlib2 directory.  
-
-#. Create a conda environment with all of the requisite packages by issuing the following command:
-
-        conda env create -f environment.yml
-        
-#. You should see a new `Spyder (manim2)` icon on the start menu that automatically opens spyder in the new environment.  
-
-#. Add the manimlib2 directory to your python path.  In Spyder, use the Python Path manager on the Tools menu.  
-
-#. Open `basics.py` in the Tutorials directory.  If it runs, you win!  
-
-
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
 
