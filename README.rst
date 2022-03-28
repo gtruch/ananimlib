@@ -9,30 +9,28 @@ of mathematically preceise animations through an intuitive and extensible API.
 
 The following code spins a square it as it moves across the canvas.
 
-.. literalinclude:: ./code/quickstart_ex3.py
-  :start-after: # START
-  :end-before: # END
-  :linenos:
+.. code-block:: python
+
+    import ananimlib as al
+
+     rect = al.Rectangle([1,1])
+
+     al.Animate(
+         al.AddAnObject(rect),
+         al.MoveTo(rect,[-3.0,0.0]),
+         al.RunParallel(
+             al.Move(rect, [6,0], duration=1.0),
+             al.Rotate(rect, 2*3.1415, duration=1.0),
+         ),
+         al.Wait(1.0)
+    )
+
+    al.play_movie()
+
 
 .. image:: quickstart_ex3.gif
     :width: 95%
     :align: center
 
-See the :ref:`Quickstart <quickstart>` for a quick introduction.
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Table of Contents
-   
-   quickstart
-   custom_mobjects
-   stuff
-   API Reference <manimlib2>
-   
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
 
