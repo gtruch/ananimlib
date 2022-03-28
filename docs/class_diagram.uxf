@@ -1,0 +1,39 @@
+<diagram program="umletino" version="14.4.0-SNAPSHOT"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>220</x><y>80</y><w>210</w><h>390</h></coordinates><panel_attributes>Mobject
+--
+coordinates: Coordinates
+renderer: Renderer
+data
+
+position: Vector
+about_point: Vector
+rotation_angle: float
+scale: Vector
+
+bounding_box: 2x3 ndarray
+center: Vector
+upper: float
+lower: float
+left: float
+right: float
+e_center: Vector
+e_upper: float
+e_lower: float
+e_right: float
+--
+render(canvas)
+about_center()
+about_left()
+about_right()
+about_upper()
+about_lower()
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>590</x><y>520</y><w>210</w><h>190</h></coordinates><panel_attributes>VMobject
+--
+-id: Long
+_-ClassAttribute: Long_
+--
+#Operation(i: int): int
+/+AbstractOperation()/
+--
+Responsibilities
+-- Resp1
+*-- Resp2*</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>290</x><y>460</y><w>320</w><h>170</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;150;300;150</additional_attributes></element></diagram>

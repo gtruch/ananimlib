@@ -1,0 +1,10 @@
+__pycache__
+~*
+.spyproject
+.vscode
+.tex
+docs/_build/
+/*.egg-info
+video
+build
+dist
