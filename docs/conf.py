@@ -33,7 +33,7 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.autodoc',
     'sphinx_rtd_theme',
-    'sphinx_rtd_dark_mode',
+#    'sphinx_rtd_dark_mode',
     'sphinx.ext.todo'
 ]
 
