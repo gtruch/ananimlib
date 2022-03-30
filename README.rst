@@ -7,7 +7,7 @@ AnAnimlib, was inspired by `ManimLib <https://github.com/3b1b/manim>`_ by Grant
 Sanderson of 3 Blue 1 Brown.  The aim of AnAnimlib is to facilitate the creation
 of mathematically preceise animations through an intuitive and extensible API.
 
-The following code spins a square it as it moves across the canvas.
+As a simple example, the following code spins a square it as it moves across the canvas.
 
 .. code-block:: python
 
@@ -32,7 +32,10 @@ The following code spins a square it as it moves across the canvas.
     :width: 95%
     :align: center
 
-
-Full documentation available at `Read The Docs https://ananimlib.readthedocs.io/en/latest/index.html`
-
 Installation instructions:
+
+.. code-block::
+
+    > pip install ananimlib
+    
+Documentation is available at `Read The Docs <https://ananimlib.readthedocs.io/en/latest/index.html>`_
