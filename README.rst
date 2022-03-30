@@ -34,3 +34,5 @@ The following code spins a square it as it moves across the canvas.
 
 
 Full documentation available at `Read The Docs https://ananimlib.readthedocs.io/en/latest/index.html`
+
+Installation instructions:
