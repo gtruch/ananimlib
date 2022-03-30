@@ -33,4 +33,4 @@ The following code spins a square it as it moves across the canvas.
     :align: center
 
 
-
+Full documentation available at `Read The Docs https://ananimlib.readthedocs.io/en/latest/index.html`
