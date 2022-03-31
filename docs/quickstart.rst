@@ -22,8 +22,8 @@ Let's take a look at the code.
 * In Line 1, we import ananimlib under the alias 'al' to save us
   some keystrokes and because "Namespaces are one honking great idea." 
 
-* In line 3, we invoke the library's *Animate* method to start rendering 
-  frames. *Animate* takes a variable number of *Instructions* and executes them 
+* In line 3, we invoke the library's *Animate* method to start rendering frames.
+  *Animate* takes a variable number of *Instructions* and executes them
   sequentially to create the final animation.    
 
 * On line 8, we create an *AddAnObject* instruction to Add an Animation Object 
@@ -68,10 +68,9 @@ Let's make it move across the canvas.
 Here's the output
 
 .. image:: quickstart_ex2.gif
-    :width: 95%
-    :align: center
+  :width: 95%
+  :align: center
 
-|
 Simultaneous Instructions
 -------------------------
 
@@ -141,7 +140,7 @@ respect to an *AnObject*'s about point.
 .. image:: quickstart_ex5.gif
     :width: 85%
     :align: center
-| 
+    
 Below, we display the underlying coordinate grid as well as the rectangle's
 about point to make it easier to see how the rotation relates to the about point.
 
