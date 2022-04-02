@@ -32,7 +32,6 @@ As a simple example, the following code spins a square it as it moves across the
     :width: 95%
     :align: center
  
-Documentation is available at `Read The Docs <https://ananimlib.readthedocs.io/en/latest/index.html>`
 
 Installation instructions:
 
@@ -40,4 +39,4 @@ Installation instructions:
 
     > pip install ananimlib
     
-Documentation is available at `Read The Docs <https://ananimlib.readthedocs.io/en/latest/index.html>`_
+Documentation available at `Read The Docs <https://ananimlib.readthedocs.io/en/latest/index.html>`_
