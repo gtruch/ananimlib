@@ -305,7 +305,7 @@ class Vector(np.ndarray):
 
             If x is an iterable, x,y,and z will be set with its contents and
             named parameters y and z will be ignored. If the iterable in x
-            it contains fewer than three elements, the remaining elements will
+            contains fewer than three elements, the remaining elements will
             be filled with zeros.
 
             If x is not iterable, x, y, and z will be taken from the named
@@ -313,7 +313,7 @@ class Vector(np.ndarray):
         """
 
         if isinstance(x,np.ndarray) and len(x) == 3:
-            data = x
+            data = x   # Go fast if this is a numpy array
         else:
 
             try:

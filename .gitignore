@@ -4,6 +4,7 @@ __pycache__
 .vscode
 .tex
 docs/_build/
+docs/code/*.mp4
 /*.egg-info
 video
 build

@@ -564,10 +564,23 @@ class CompositeAnObject(AnObject):
             next_target.add(anobject, key, next_path)
             
     def get_anobject(self,key):
-        """Get a reference to an AnObject that's in the container
+        """Get a reference to an AnObject that's in the composite
+
+        Parameters
+        ----------
+        key : iterable, AnObject, Slice, int, or str
+            The key to the desired Anobject(s)
+            Depends on the data type of the key: 
+                iterable - used to walk the Composite tree
+                Anobject - uses the Anobject's object id as a string key
+                slice    - Returns a CompositeAnObject containing a copy of 
+                           the AnObjects in the slice
+                int      - used a an index into the array of AnObjects
+                str      - used as a key for internal lookup. (dictionary key)
+
         """
              
-        # Passed key is actually an AnObject.  Attempt to look up the key.
+        # Passed key is an AnObject.  Attempt to look up the key.
         if isinstance(key,al.AnObject):
             
             if key in self.key_lookup:
@@ -576,13 +589,46 @@ class CompositeAnObject(AnObject):
                 raise KeyError("AnObject reference passed as a key but"
                                  " that AnObject is not in this Composite.")
 
+        # Passed key is a string, let's see what we have on file...
         if isinstance(key,str):
             
-            # Passed key is a string, let's see what we have on file...
             if key in self.anobjects.keys():
                 return self.anobjects[key]
             else:
                 raise ValueError(f"No AnObject listed with key='{key}'")
+
+        # Passed key is an int.  Return the keyth key in the key list
+        elif isinstance(key,int):
+            
+            if key < len(self.keys):
+                return self.anobjects[self.keys[key]]
+            else:
+                raise ValueError(f"Requested AnObject {key} but there" +
+                                 f" are only {len(self.keys)} AnObjects" +
+                                 f" in this Composite")
+
+
+        # Passed key is a slice.  
+        # Return a new Composite AnObject with copies 
+        # of the Anobjects in the slice
+        elif isinstance(key,slice):
+            
+            # Create a new instance of the current class type
+            ret = self.__class__()
+            
+            # Get the anobjects 
+            keys = cp.deepcopy(self.keys[key])
+            anobjects = [cp.deepcopy(self.anobjects[k]) for k in keys]
+            
+            # Add them to the new class
+            for ano, key in zip(anobjects,keys):
+                ret.add_anobject(ano,key)
+                
+            # copy the transform matrix
+            ret.coordinates = cp.deepcopy(self.coordinates)
+                        
+            return ret
+            
         
         elif len(key) > 1: 
             return self.get_anobject(key[0]).get_anobject(key[1:])
@@ -739,9 +785,8 @@ class CompositeAnObject(AnObject):
         self.add_anobject(new_mob,name,preserve_transform=False)
         new_mob.about_center()
 
-
-
-    # def __getitem__(self,index):
+    def __getitem__(self,index):
+        return self.get_anobject(index)
         
         
     #     if isinstance(index,slice):
@@ -760,8 +805,8 @@ class CompositeAnObject(AnObject):
     #     pass
         
 
-    # def __len__(self):
-    #     return len(self.data)
+    def __len__(self):
+        return len(self.keys)
 
 
 # class AnObjectContainer():

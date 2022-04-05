@@ -6,10 +6,10 @@ Created on Fri Dec 20 12:34:18 2019
 
 @author: GtRuch
 """
-
-import colour as cl
 import cairo
-import numpy as np
+import numpy     as np
+import ananimlib as al
+import colour    as cl
 
 class Render():
     """Render class to pair with the data classes.
@@ -279,12 +279,20 @@ class Pen():
                        fill_opacity=0.0,
                        fill_pattern=None):
 
-        self.stroke_color    = stroke_color
-        self.stroke_opacity  = stroke_opacity
-        self.stroke_width    = stroke_width
-        self.fill_color      = fill_color
-        self.fill_opacity    = fill_opacity
-        self.fill_pattern    = fill_pattern
+        if al._default_pen is None:
+            self.stroke_color    = stroke_color
+            self.stroke_opacity  = stroke_opacity
+            self.stroke_width    = stroke_width
+            self.fill_color      = fill_color
+            self.fill_opacity    = fill_opacity
+            self.fill_pattern    = fill_pattern
+        else : 
+            self.stroke_color    = al._default_pen.stroke_color
+            self.stroke_opacity  = al._default_pen.stroke_opacity
+            self.stroke_width    = al._default_pen.stroke_width
+            self.fill_color      = al._default_pen.fill_color
+            self.fill_opacity    = al._default_pen.fill_opacity
+            self.fill_pattern    = al._default_pen.fill_pattern
 
     @property
     def stroke_color(self):

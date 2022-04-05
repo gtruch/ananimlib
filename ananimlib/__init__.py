@@ -62,6 +62,9 @@ _defaults = {
     'tex_dir'    : './tex'
 }
 
+# Global default pen    
+_default_pen = None
+
 # Instantiate a default animation engine and provide the Animate method
 engine = AnEngine()
 

@@ -38,6 +38,8 @@ class Text(al.SVGAnObject):
         super().__init__(self._build_svg(pre+text+post),pen=pen,rescale=0.08)
         self.about_center()
         self.position = [0.0]
+        
+    
 
     @property
     def opacity(self):
@@ -46,11 +48,21 @@ class Text(al.SVGAnObject):
     @opacity.setter
     def opacity(self, value):
         self._opacity=value
-        for sym in self.data.keys:
+        for sym in self.keys:
             self.get_anobject(sym).fill_opacity = \
                     self._opacity*self._fill_opacity
             self.get_anobject(sym).stroke_opacity = \
                     self._opacity*self._stroke_opacity
+
+    # def get_anobject(self, key):
+        
+    #     if isinstance(key,slice):
+    #         new_composite = super().get_anobject(key)
+    #         ret = Text()
+    #         for ano in new_composite:
+    #             ret.add_anobject(ano)
+    #     else : 
+    #         return super().get_anobject(key)
 
 
     def _build_svg(self,new_text):
@@ -88,8 +100,8 @@ class Text(al.SVGAnObject):
 
     def set_pen(self,pen):
 
-        for sym in self.data:
-            sym.renderer.pen = cp.copy(pen)
+        for sym in range(len(self)):
+            self.get_anobject(sym).renderer.pen = cp.copy(pen)
             self._fill_opacity=pen.fill_opacity
             self._stroke_opacity=pen.stroke_opacity
 

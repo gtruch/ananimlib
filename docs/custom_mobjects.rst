@@ -60,6 +60,7 @@ The output from both snippets is the same:
     
     stuff
 
+
 Both *SetAttribute* and *SlideAttribute* take as parameters the *AnObject*, the name
 of the attribute to manipulate, a value to assign that attribute, and an
 optional duration.  Here is how the Move instruction is implemented:
