@@ -12,7 +12,7 @@ attributes using *Instructions*.
 SetAttribute and SlideAttribute
 -------------------------------
 
-Many instructions, inherit from one of two core instructions; *SetAttribute*,
+Many instructions included with *AnAnimLib* inherit from one of two core instructions; *SetAttribute*,
 which sets an attribute to a particular value,  and *SlideAttribute*, which
 "slides" an attribute through a range of values. The snippets below demonstrate
 two ways to perform a move; using *Move* and *MoveTo* or using *SetAttribute*
@@ -60,7 +60,6 @@ The output from both snippets is the same:
     
     stuff
 
-
 Both *SetAttribute* and *SlideAttribute* take as parameters the *AnObject*, the name
 of the attribute to manipulate, a value to assign that attribute, and an
 optional duration.  Here is how the Move instruction is implemented:
@@ -101,4 +100,6 @@ optional duration.  Here is how the Move instruction is implemented:
 Since *SetAttribute* and *SlideAttribute* operate on an arbitrary attribute, our
 custom instruction need only pass the name of that attribute and any other
 required parameters to the *__init__* method of the parent class.  
+
+
 

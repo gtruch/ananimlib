@@ -86,7 +86,7 @@ instructions simultaneoulsly.
 In this example, we instantiated our rectangle on Line 3 and passed a reference to 
 AddAnObject on Line 6. We also passed a reference to the instructions at 
 line 7, 9, and 10 rather than the String based key that we used in the previous example.  
-You can refer to *AnObjects* in the scene either by reference or by key, if one was assinged.  
+You can refer to *AnObjects* in the scene either by reference or by key, if one was assigned.  
 
 .. image:: quickstart_ex3.gif
     :width: 95%
@@ -187,10 +187,10 @@ manipulated separately or as a group.  Here's an example:
 - The *MoveTo* at line 9 moves the entire composite to position [3,0] with
   respect to the main canvas.  
 - The MoveTo in line 12 moves just the arrow to position [0.5,0] with respect to
-  the *CompositeMobject*. 
+  the *CompositeAnObject*. 
 - On line 15, we move the about point of the arrow to
   [-0.5,0.0] with respect to itself. This puts the arrow's about point at 
-  the [0,0] with respect to the *CompositeMobject*, or [3,0] with respect to the main canvas.  
+  the [0,0] with respect to the *CompositeAnObject*, or [3,0] with respect to the main canvas.  
 - On line 16, we rotate the Arrow 180 degrees (or \pi radians) around its about
   point.
 - Finally, the MoveTo on line 19 moves the entire composite back to the origin of the 
