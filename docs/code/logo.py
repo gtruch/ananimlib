@@ -15,8 +15,8 @@ def main():
     # Tune the camera parameters
     al.engine.config_camera(width = 11, 
                             ar    = 11/7, 
-                            frame_rate = 120, 
-                            DPI = 120)    
+                            frame_rate = 50, 
+                            DPI = 55)    
     
     al.Animate(
 
@@ -28,28 +28,34 @@ def main():
             
             # Let the sim run for awhile then draw the title
             al.RunSequential(
-                al.Wait(6.0),
+                al.Wait(4),
                 
                 # Move the simulation down and shrink it while drawing the title
                 al.RunParallel(
-                    al.Scale('sim', 0.85,duration=1.0),
-                    al.Move('sim', [0,-0.75],duration=1.0),
+                    al.Scale('sim', 0.9,duration=1.0),
+                    al.Move('sim', [0,-0.5],duration=1.0),
                     draw_title()
                 ),
+                al.Wait(1.5),
+                al.RunParallel(*[
+                    al.Emphasize(key, scale_mult=1.2, duration=0.75)
+                        for key in ['Another','Animation','Library']]
+                )
             )
         ),
         al.Wait(10.0)
     )
 
     al.play_movie()                         # Play the movie in a window
-    al.engine.backend.save_mp4("Logo.mp4")  # Save the movie as an mp4
+#    al.engine.backend.save_mp4("Logo.mp4")  # Save the movie as an mp4
+    al.engine.backend.save_gif("Logo.gif")
 
 
 def draw_title():
         
     text_list = [    "Another", "Animation",  "Library"]
     size_list = [            2,           4,         3]
-    pos_list  = [ [-2.23, 2.4],     [0,2.4], [2.3,2.38]]
+    pos_list  = [ [-2.23, 2.8],     [0,2.8], [2.3,2.78]]
     
     tt1 = []
     tt2 = []
@@ -61,13 +67,14 @@ def draw_title():
         text2 = text1.get_anobject(slice(0,sz))
         text2.about_center()
         text2.set_pen(al.Pen(fill_color="#cda448",                                      
-                                 fill_opacity=1.0,))
+                                 fill_opacity=1.0,
+                                 stroke_width = 2.0))
 
         instructions.extend((
             al.AddAnObject(text1),
             al.DrawText(text1, duration=1.0),
             al.Wait(1.0),
-            al.AddAnObject(text2),
+            al.AddAnObject(text2,key=tt),
             al.SlideAttribute(text1, 'opacity', 0, duration=1.0),
             al.MoveTo(text2, pp,duration=1.0)
                         
@@ -85,9 +92,9 @@ def slide_simulation(key=None):
 
     path = al.PolyBezier()
     path.connect_smooth(dots)
-    path_ob = al.BezierAnObject(path=path)
+    path_ob = al.BezierAnObject(path=path,pen=al.Pen(stroke_width=2.0))
                 
-    g = 3.0
+    g = 4.0
     
     box = SlidyBox(0.1,0.0,path,g=g)
 
@@ -101,7 +108,7 @@ def slide_simulation(key=None):
 
     return al.RunSequential(
         al.AddAnObject(grid,key),
-        al.SetAttribute([grid,box], 'u', pos_func,duration=17.7),            
+        al.SetAttribute([grid,box], 'u', pos_func, duration=15.4),            
     )
 
 class SlidyBox(al.CompositeAnObject):
@@ -161,7 +168,7 @@ class SlidyBox(al.CompositeAnObject):
         fnlabel = al.TexMath("\\vec{F}_n")
         fnlabel.scale = label_scale
         fn.add_anobject(fnlabel,'label')
-        fnlabel.position = [0.7,0]
+        fnlabel.position = [1.0,0]
         fnlabel.rotation_angle = -np.pi/2
         self.add_anobject(fn,"fn")
 

@@ -5,6 +5,7 @@ __pycache__
 .tex
 docs/_build/
 docs/code/*.mp4
+docs/code/*.gif
 /*.egg-info
 video
 build
