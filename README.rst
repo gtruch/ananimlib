@@ -2,7 +2,7 @@
 ============================================================
 Welcome *AnAnimLib*
 ============================================================
-.. image:: Logo.gif
+.. image:: docs/Logo.gif
   :width: 100%
 |
 AnAnimlib was inspired by `ManimLib <https://github.com/3b1b/manim>`_ by Grant
