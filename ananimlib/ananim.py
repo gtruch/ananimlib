@@ -4,17 +4,16 @@ Created on Sat Aug 24 21:42:30 2019
 
 @author: gtruch
 """
-
 import ananimlib as al
-import ananimlib.config as cfg
-import configparser
-
-
 import numpy as np
 
 class AnEngine():
     """The central animation engine
 
+    Contains and manages the central animation loop in the *run* method.  
+    
+    Maintains a references to the *Scene* (the set of AnObjects currently being 
+    animated), the *Camera* (generates image frames the *Scene*),  minimal backend that 
     
     
     """
@@ -43,27 +42,27 @@ class AnEngine():
         Parameters
         ----------
         *instructions :tuple of Instruction
-            The set of instructions that run should run. 
+            The set of instructions to run. 
             
         """
-        instructionTree = al.RunSequential(*instructions)
+        instruction_tree = al.RunSequential(*instructions)
         frame_rate = self.scene.camera.frame_rate
         pw,ph = self.scene.camera.pixelsPerFrame
 
 
         dt  = 1.0/frame_rate
         self.backend.start()               # Tell the backend to get ready
-        instructionTree.start(self.scene)  # Tell the instruction tree to get 
+        instruction_tree.start(self.scene)  # Tell the instruction tree to get 
                                            # ready
 
         # Perform a dt=0 update of the scene to execute leading
         # instructions that use no animation time prior to the first render
-        instructionTree.update(self.scene,0.0)
+        instruction_tree.update(self.scene,0.0)
 
         ###########################
         # The main animation loop #
         ###########################
-        while not instructionTree.finished:
+        while not instruction_tree.finished:
 
             if self.render:
                 # Render the scene
@@ -73,7 +72,7 @@ class AnEngine():
                 self.backend.addFrame(self.scene.frame)
 
             # Update the scene for the next frame
-            instructionTree.update(self.scene,dt)
+            instruction_tree.update(self.scene,dt)
 
         # Tell the Backend that no more frames are coming
         if self.render:
@@ -183,15 +182,6 @@ class AnEngine():
         frame_rate : float
             The frame rate in frames per second
         """
-
-        # if self.backend == "pygame":
-        #     self.backend_ob = manimlib2.Backend.PyGameBackend(pw,ph,frame_rate)
-        # else:
-        #     self.backend_ob = manimlib2.Backend.MP4Backend(
-        #             pw,ph,
-        #             frame_rate,
-        #             self._animation_name,
-        #             outDir=self.directoryConfig.video_dir)
         self.backend = al.Backend(pw,ph,frame_rate)
 
 
@@ -201,62 +191,6 @@ class AnEngine():
                             self.frame_rate)
         self.config_camera(self.width,self.ar,self.frame_rate,self.DPI)
 
-
-
     def play_movie(self, repeat=-1):
         """Have the current backend play the movie"""
         self.backend.play_movie(repeat)
-
-
-    def _readConfig(self):
-        """Read the ini file and setup up Config objects"""
-
-        # Read 'manim.ini' file
-        cp = configparser.ConfigParser()
-        cp.read('manim.ini')
-
-        # Scan for missing sections in the config parser
-        for section in ['Camera','FileWriter','Directory','Scene']:
-
-            # If an ini section is missing, add a blank section so that the
-            # Config subclasses can set sensible hard coded defaults.
-            if section not in cp.sections():
-                cp.add_section(section)
-
-        # Instantiate the Config objects
-        self.cameraConfig      = cfg.CameraConfig(
-                dict(cp['Camera'].items()))
-        self.backendConfig  = cfg.FileWriterConfig(
-                dict(cp['FileWriter'].items()))
-        self.directoryConfig   = cfg.DirectoryConfig(
-                dict(cp['Directory'].items()))
-        self.sceneConfig       = cfg.SceneConfig(
-                dict(cp['Scene'].items()))
-
-
-    def print_instructions(self,instruction_tree):
-
-        # Print the names of the current instructions
-        if hasattr(instruction_tree, "_instructions"):
-            current = [type(inst).__name__
-                       for inst in instruction_tree._instructions]
-            print("** Current Instructions: %s"%(" ".join(current)))
-
-            # Follow branches for the current instructions
-            for inst in instruction_tree._instructions:
-                print("Under %s"%type(inst).__name__)
-                self.print_instructions(inst)
-                print("**************")
-
-        # Follow branches for next instructions
-        if len(instruction_tree.nextInstructions) > 0:
-            print("** Next Instructions: %s"%(" ".join([type(inst).__name__
-                    for inst in instruction_tree.nextInstructions])))
-            for inst in instruction_tree.nextInstructions:
-                print("Under %s"%type(inst).__name__)
-                self.print_instructions(inst)
-                print("****************")
-
-
-
-

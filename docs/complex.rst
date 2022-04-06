@@ -53,12 +53,11 @@ and *SlideAttribute*.
 
 The output from both snippets is the same:
 
-.. figure:: quickstart_example2.gif
+.. figure:: quickstart_ex2.gif
     :class: with-border
     :width: 95%
     :align: center
-    
-    stuff
+|    
 
 Both *SetAttribute* and *SlideAttribute* take as parameters the *AnObject*, the name
 of the attribute to manipulate, a value to assign that attribute, and an

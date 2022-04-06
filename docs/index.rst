@@ -27,14 +27,6 @@ See the :ref:`Quickstart <quickstart>` for a quick introduction.
    :caption: Table of Contents
    
    quickstart
-   custom_mobjects
-   stuff
-   API Reference <manimlib2>
+   complex
+   API Reference <ananimlib_api>
    
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
