@@ -563,13 +563,12 @@ class CompositeAnObject(AnObject):
         key : iterable, AnObject, Slice, int, or str
             The key to the desired Anobject(s)
             Depends on the data type of the key: 
-                iterable - used to walk the Composite tree
-                Anobject - uses the Anobject's object id as a string key
-                slice    - Returns a CompositeAnObject containing a copy of 
-                           the AnObjects in the slice
-                int      - used a an index into the array of AnObjects
-                str      - used as a key for internal lookup. (dictionary key)
-
+            iterable - used to walk the Composite tree
+            Anobject - uses the Anobject's object id as a string key
+            slice    - Returns a CompositeAnObject containing a copy of 
+            the AnObjects in the slice
+            int      - used a an index into the array of AnObjects
+            str      - used as a key for internal lookup. (dictionary key)
         """
              
         # Passed key is an AnObject.  Attempt to look up the key.
@@ -976,8 +975,7 @@ class SVGAnObject(CompositeAnObject):
     """Parse SVG file into a CompositeAnObject
 
     Extremely limited SVG processing.  
-    Used for reading latex output from an svg file created by dvisvgm  
-    (See TexAnObject)
+    Primarily used for reading latex output from an svg file
     """
 
     def __init__(self,file=None,pen=None,rescale=1.0):

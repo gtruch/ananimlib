@@ -12,153 +12,6 @@ import ananimlib as al
 import copy as cp
 import numpy as np
 
-class R_Triangle(al.BezierAnObject):
-
-    def __init__(self,vertex,pen=None):
-
-        self._vertex = al.Vector(vertex)
-        path = al.PolyBezier()
-        path.connect_linear([[0,0],
-                            [self._vertex.x,self._vertex.y],
-                            [self._vertex.x,0],
-                            [0,0]])
-
-        super().__init__(path,pen)
-
-    @property
-    def vertex(self):
-        return self._vertex
-
-    @vertex.setter
-    def vertex(self,vertex):
-        self._vertex = al.Vector(vertex)
-        path = al.PolyBezier()
-        path.connect_linear([[0,0],[vertex.x,vertex.y],[vertex.x,0],[0,0]])
-        self.data = path
-
-
-
-class Dimension(al.CompositeAnObject):
-    """A dimension bracket with a label
-
-    Attributes
-    ----------
-
-    left : Vector
-        The coordinates of the left pointer
-
-    right : Vector
-        The coordinates of the right pointer
-    """
-
-    def __init__(self,left_point, right_point):
-        super().__init__()
-
-        self._left_point = al.Vector(left_point)
-        self._right_point = al.Vector(right_point)
-
-
-
-        self._build_dimension()
-
-    @property
-    def length(self):
-        return (self._right_point - self._left_point).r
-
-    @property
-    def left_point(self):
-        return self._left_point
-
-    @property
-    def right_point(self):
-        return self._right_point
-
-    @left_point.setter
-    def left_point(self,point):
-        self._left_point = point
-        self._build_dimension()
-
-    @right_point.setter
-    def right_point(self,point):
-        self._right_point = point
-        self._build_dimension()
-
-    def _build_dimension(self):
-        self.clear()    # Throw out the old anobjects
-        length = self.length
-        self.position = [0.0,0.0]
-        self.rotation_angle = 0.0
-
-        data = [[0,0],             # Left
-                [0.0,0.5],         # Top Left
-                [length,0.5],      # Top Right
-                [length,0],        # Right
-                [length-0.1,0.45],  # Under right
-                [0.1,0.45],         # Under left
-                [0,0]]             # Left
-
-        line = al.BezierAnobject(pen = al.Pen(fill_opacity=1.0))
-        line.data.connect_linear(data)
-
-        label = al.Number("%.2f"%(length))
-        label.about_center()
-        label.about_lower()
-        label.position = [length/2,0.6]
-        label.scale=0.5
-
-        self.add_anobject(line)
-        self.add_anobject(label)
-
-        self.position = self._left_point
-        self.rotation_angle = (self._right_point-self._left_point).theta
-
-
-class Line(al.BezierAnObject):
-    """A straight line.
-
-    Parameters
-    ----------
-    point 1 : Vector
-        The coordinates of the first end point
-
-    point 2 : Vector
-        The coordinates of the second end point
-    """
-    def __init__(self,point1,point2,pen=None):
-        super().__init__(pen=pen)
-
-        self._point1 = al.Vector(point1)
-        self._point2 = al.Vector(point2)
-
-        self._build()
-        
-
-
-    @property
-    def point1(self):
-        return self._point1
-
-    @point1.setter
-    def point1(self, newpoint):
-        self._point1 = al.Vector(newpoint)
-        self._build()
-
-    @property
-    def point2(self):
-        return self._point2
-
-    @point2.setter
-    def point2(self, newpoint):
-        self._point2 = al.Vector(newpoint)
-        self._build()
-
-    def _build(self):
-        path = al.PolyBezier()
-        path.connect_linear([self._point1,self._point2])
-
-        self.data=path
-
-
 
 class Circle(al.BezierAnObject):
     """A Circle
@@ -209,24 +62,30 @@ class Circle(al.BezierAnObject):
 
         self.data = path
 
-class Dot(Circle):
-    """A solid dot (filled in circle)
-    
-    Parameters
-    ----------
-    radius : optional float
-        The radius of the dot.
-        default = 0.1
-        
-    pen : optional Pen
-        The pen used to draw the dot
-        default = A pleasing (to me) color
-    """
-    
-    def __init__(self,radius=0.1,pen=None):
+
+class CrossHair(al.BezierAnObject):
+    """A crosshair"""
+
+    def __init__(self,size=0.25,pen=None,coordinates=None):
+
         if pen is None:
-            pen = al.Pen(fill_color="#cda448", fill_opacity=1.0)
-            super().__init__(radius,pen=pen)
+            pen = al.Pen(stroke_width=0.75)
+
+        try:
+            iter(size)
+        except:
+            size = [size,size]
+
+
+        # Initialize the path
+        path = al.PolyBezier()
+        path.connect_linear([al.Vector(-size[0]/2,0),al.Vector(size[0]/2,0)])
+        path.connect_linear([al.Vector(0,-size[1]/2),al.Vector(0,size[1]/2)])
+
+
+        super().__init__(path, pen)
+
+
 
 class Arc(Circle):
     """A circular arc
@@ -281,7 +140,6 @@ class Arc(Circle):
                            self.start_angle)/(2*np.pi-self.start_angle))
 
         self.data = new
-
 
 class Arrow(al.CompositeAnObject):
     """A basic arrow consisting of a line with a pointy tip.
@@ -441,39 +299,6 @@ class Arrow(al.CompositeAnObject):
         head.about_right()
         head.position      = [self.magnitude,0]
 
-
-class DoubleArrow(Arrow):
-
-
-
-    def _build_arrow(self):
-
-
-        if not 'head2' in self.data.keys:
-            head2 = ArrowHead(pen=self.head_pen,size=self.head_size)
-            self.add_anobject(head2,'head2')
-        else:
-            head2 = self.get_anobject('head2')
-
-        head = self.get_anobject('head')
-        tail = self.get_anobject('tail')
-
-        # Lay the arrow natively on the x-axis
-        # with its tail at the origin
-        tail.data = al.PolyBezier()
-        tail.data.connect_linear(
-                    [[              head2.length, 0],
-                     [self.magnitude-head.length, 0]])
-
-        # Put the head at the front end of the tail
-        head.about_right()
-        head.position      = [self.magnitude,0]
-
-        head2.about_right()
-        head2.rotation_angle = np.pi
-        head2.position=[0,0]
-
-
 class ArrowHead(al.BezierAnObject):
 
     def __init__(self,length=0.2,width=0.15,back=0.05,size=1.0,pen=None):
@@ -505,90 +330,141 @@ class ArrowHead(al.BezierAnObject):
 
         self.data = path
 
+class Dot(Circle):
+    """A solid dot (filled in circle)
+    
+    Parameters
+    ----------
+    radius : optional float
+        The radius of the dot.
+        default = 0.1
+        
+    pen : optional Pen
+        The pen used to draw the dot
+        default = A pleasing (to me) color
+    """
+    
+    def __init__(self,radius=0.1,pen=None):
+        if pen is None:
+            pen = al.Pen(fill_color="#cda448", fill_opacity=1.0)
+            super().__init__(radius,pen=pen)
 
-class EngineerPaper(al.CompositeAnObject):
-    """A piece of green engineering paper to draw on"""
+class DoubleArrow(Arrow):
 
-    def __init__(self,size=al.Vector([8.5,11.0]),gridDensity=7.0,
-                 topMarg=0.04, botMarg=0.0,
-                 leftMarg=0.09,rightMarg=.04):
-        """Build the composite
+    def _build_arrow(self):
 
-        Parameters
-        ----------
-        size : Vector
-            Size of the paper in Scene Units
+        if not 'head2' in self.data.keys:
+            head2 = ArrowHead(pen=self.head_pen,size=self.head_size)
+            self.add_anobject(head2,'head2')
+        else:
+            head2 = self.get_anobject('head2')
 
-        gridDensity : optional float
-            Number of gridlines per Scene Unit
-            default = 5.0
+        head = self.get_anobject('head')
+        tail = self.get_anobject('tail')
 
-        topMarg,botMarg,leftMarg,rightMarg : float
-            The margins as a percentage of the paper dimensions
-        """
-        super().__init__()
+        # Lay the arrow natively on the x-axis
+        # with its tail at the origin
+        tail.data = al.PolyBezier()
+        tail.data.connect_linear(
+                    [[              head2.length, 0],
+                     [self.magnitude-head.length, 0]])
 
-        # Convenience variables
-        size = al.Vector(size)
-        tm,bm,lm,rm = (topMarg,botMarg,leftMarg,rightMarg)
-        sx,sy,_ = size
+        # Put the head at the front end of the tail
+        head.about_right()
+        head.position      = [self.magnitude,0]
 
-        # Create pens
-        background_pen = al.Pen(fill_color="#d9f5e2",
-                                   fill_opacity=1.0,
-                                   stroke_opacity=0.0)
+        head2.about_right()
+        head2.rotation_angle = np.pi
+        head2.position=[0,0]
 
-        grid_pen = al.Pen(stroke_color="#69933c",
-                             stroke_opacity=0.3)
+class Grid(al.BezierAnObject):
+    """A grid of lines.
 
-        margin_pen = al.Pen(stroke_color="#69933c",
-                               stroke_opacity=1.0)
+    Attributes
+    ----------
+    size : array of float
+        The size of the grid: [sx, sy]
 
-        punch_pen = al.Pen(fill_color='#000000',
-                              fill_opacity=1.0,
-                              stroke_opacity=0.0)
+    spacing : array of float
+        The x and y grid spacing
 
-        # Main paper background
-        rect = Rectangle(size,pen=background_pen)
-        rect.about_lower()
-        rect.about_left()
-        rect.position = [0.0,0.0]
+    """
 
-        # Main grid
-        mgsize =[size[0]*(1-lm-rm),size[1]*(1-tm-bm)]
-        grid = Grid(mgsize,al.Vector([1/gridDensity,1/gridDensity]),pen=grid_pen)
-        grid.about_center()
-        grid.rotation_angle = np.pi
-        grid.about_lower()
-        grid.about_right()
-#        grid.position = [sx*lm,sy*(1-bm-tm)]
-        grid.position = [sx*lm,sy*(1-tm-bm)]
+    def __init__(self,size,spacing,offset=None,pen=None):
 
-        # Dark margin lines
+        if len(size) == 1:
+            size = al.Vector([size,size])
+        else: 
+            size = al.Vector(size)
+            
+        if offset is None:
+            offset = al.Vector([0,0])
+        else:
+            offset = al.Vector(offset)
+
         path = al.PolyBezier()
-        path.connect_linear([[sx*lm,0],[sx*lm,sy]])         # left line
-        path.connect_linear([[0,sy*(1-tm)],[sx,sy*(1-tm)]]) # top line
-        path.connect_linear([[sx*(1-rm),0],[sx*(1-rm),sy]]) # right line
+        
+        start = -np.floor((size/2+offset)/spacing)*spacing + offset
+        end = start + size
 
-        # Weird little lines at the top of the page
-        path.connect_linear([[sx*(lm + 1/3*(1-rm-lm)),sy*(1-tm)],
-                               [sx*(lm + 1/3*(1-rm-lm)),sy]])
-        path.connect_linear([[sx*(lm + 2/3*(1-rm-lm)),sy*(1-tm)],
-                                [sx*(lm + 2/3*(1-rm-lm)),sy]])
-        mgrid = al.AnObject(path, al.BezierRender(pen=margin_pen))
-        mgrid.about_lower()
-        mgrid.about_left()
-        mgrid.position = [0,0]
+        # Horizontal lines
+        for ypos in np.arange (start[1],end[1],spacing[1]):
+            path.connect_linear([[-size[0]/2, ypos],
+                                 [ size[0]/2, ypos]])
+            
+        # Vertical lines
+        for xpos in np.arange(start[0],end[0],spacing[0]):
+            path.connect_linear([[xpos, -size[1]/2],
+                                 [xpos, size[1]/2]])
 
-        self.add_anobject(rect)
-        self.add_anobject(grid)
-        self.add_anobject(mgrid)
 
-        # punch holes (5/8 of an inch)
-        for y in np.array([1.375, 5.5, 9.375])/11.0:
-            hole = Circle(radius=.15, pen = punch_pen)
-            hole.position = [sx*lm/2,y*sy]
-            self.add_anobject(hole)
+        super().__init__(path,pen)
+
+class Line(al.BezierAnObject):
+    """A straight line.
+
+    Parameters
+    ----------
+    point 1 : Vector
+        The coordinates of the first end point
+
+    point 2 : Vector
+        The coordinates of the second end point
+    """
+    def __init__(self,point1,point2,pen=None):
+        super().__init__(pen=pen)
+
+        self._point1 = al.Vector(point1)
+        self._point2 = al.Vector(point2)
+
+        self._build()
+        
+
+
+    @property
+    def point1(self):
+        return self._point1
+
+    @point1.setter
+    def point1(self, newpoint):
+        self._point1 = al.Vector(newpoint)
+        self._build()
+
+    @property
+    def point2(self):
+        return self._point2
+
+    @point2.setter
+    def point2(self, newpoint):
+        self._point2 = al.Vector(newpoint)
+        self._build()
+
+    def _build(self):
+        path = al.PolyBezier()
+        path.connect_linear([self._point1,self._point2])
+
+        self.data=path
+
 
 
 class Rectangle(al.BezierAnObject):
@@ -642,69 +518,5 @@ class Rectangle(al.BezierAnObject):
             #                      ml.Vector(self._size.x, 0     )],      # lr
             #                      close=True)
 
-class Grid(al.BezierAnObject):
-    """A grid of lines.
 
-    Attributes
-    ----------
-    size : array of float
-        The size of the grid: [sx, sy]
-
-    spacing : array of float
-        The x and y grid spacing
-
-    """
-
-    def __init__(self,size,spacing,offset=None,pen=None):
-
-        if len(size) == 1:
-            size = al.Vector([size,size])
-        else: 
-            size = al.Vector(size)
-            
-        if offset is None:
-            offset = al.Vector([0,0])
-        else:
-            offset = al.Vector(offset)
-
-        path = al.PolyBezier()
-        
-        start = -np.floor((size/2+offset)/spacing)*spacing + offset
-        end = start + size
-
-        # Horizontal lines
-        for ypos in np.arange (start[1],end[1],spacing[1]):
-            path.connect_linear([[-size[0]/2, ypos],
-                                 [ size[0]/2, ypos]])
-            
-        # Vertical lines
-        for xpos in np.arange(start[0],end[0],spacing[0]):
-            path.connect_linear([[xpos, -size[1]/2],
-                                 [xpos, size[1]/2]])
-
-
-        super().__init__(path,pen)
-
-
-class CrossHair(al.BezierAnObject):
-    """A crosshair"""
-
-    def __init__(self,size=0.25,pen=None,coordinates=None):
-
-        if pen is None:
-            pen = al.Pen(stroke_width=0.75)
-
-        try:
-            iter(size)
-        except:
-            size = [size,size]
-
-
-        # Initialize the path
-        path = al.PolyBezier()
-        path.connect_linear([al.Vector(-size[0]/2,0),al.Vector(size[0]/2,0)])
-        path.connect_linear([al.Vector(0,-size[1]/2),al.Vector(0,size[1]/2)])
-
-
-        super().__init__(path, pen)
 

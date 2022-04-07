@@ -18,7 +18,7 @@ class Render():
 
     """
 
-    def render(self,mobject,canvas):
+    def render(self,anobject,canvas):
         """Render the data onto the canvas.
 
         Parameters
@@ -49,7 +49,7 @@ class CairoRender(Render):
 
 
 
-    def parent_render(self,mobject,camera):
+    def parent_render(self,anobject,camera):
         """Universal Cairo rendering
 
         Handle matrix manipulations
@@ -64,7 +64,7 @@ class CairoRender(Render):
 
         # Set up the new transform matrix
         cmat = camera.context.get_matrix()
-        transform_matrix = mobject.transform_matrix
+        transform_matrix = anobject.transform_matrix
         my_mat = cairo.Matrix(
             transform_matrix[0,0],-transform_matrix[0,1],
             -transform_matrix[1,0],transform_matrix[1,1],
@@ -74,13 +74,13 @@ class CairoRender(Render):
         # Apply the transform matrix to the cairo context
         camera.context.set_matrix(my_mat.multiply(cmat))
 
-        # Apply the clip region if the mobject has one.
-        if mobject.clip is not None:
-            self.set_path(mobject.clip,camera.context)
+        # Apply the clip region if the anobject has one.
+        if anobject.clip is not None:
+            self.set_path(anobject.clip,camera.context)
             camera.context.clip()
 
         # Call the child class render
-        self.child_render(mobject,camera)
+        self.child_render(anobject,camera)
 
         # Restore the original context
         camera.context.restore()
@@ -135,21 +135,21 @@ class CairoRender(Render):
 
 class ImageRender(CairoRender):
 
-    def render(self, mobject, camera):
+    def render(self, anobject, camera):
         """Render the image into the camera frame"""
 
         ctx = camera.context
 
         # Render the image onto the base surface
-        ctx.set_source_surface(mobject.data.surface,0,0)
-        ctx.mask_surface(mobject.data.surface,0,0)
+        ctx.set_source_surface(anobject.data.surface,0,0)
+        ctx.mask_surface(anobject.data.surface,0,0)
 
 
 class CompositeRender(CairoRender):
-    """Render a group of mobjects
+    """Render a group of anobjects
 
     Position and rotation information are set in the tranform matrix
-    before each call to the render for the individual mobjects.
+    before each call to the render for the individual anobjects.
     """
 
     def render(self,anobject,camera):
@@ -190,14 +190,14 @@ class BezierRender(CairoRender):
         self._pen = val
 
 
-    def render(self,mobject,camera):
-        """Render the vmobject into the camera's cairo context
+    def render(self,anobject,camera):
+        """Render the BezierAnObject into the camera's cairo context
         """
 
         _, frame_height = camera.sceneUnitsPerFrame
 
         # Create the path described by the bezier curves
-        self.set_path(mobject.data,camera.context)
+        self.set_path(anobject.data,camera.context)
 
         # Perform the fill and stroke
         self.fill_and_stroke(camera.context,frame_height)
@@ -229,7 +229,7 @@ class BezierRender(CairoRender):
 
             # We do not want to draw with an elliptical pen.
             # If the x scale is different from the y scale,
-            # change it for the stroke and then change it backcbvcnngf clD
+            # change it for the stroke and then change it back
             cmat = context.get_matrix()
             if np.abs(cmat.xx) != np.abs(cmat.yy):
                 context.save()
@@ -252,7 +252,7 @@ class BezierRender(CairoRender):
                 context.restore()
 
 class Pen():
-    """A container for holding stroke and fill parameters for sVMobjects
+    """A container for holding stroke and fill parameters for Cairo
 
     Attributes
     ----------
@@ -310,49 +310,3 @@ class Pen():
     def fill_color(self,color):
         self._fill_color = cl.Color(color)
 
-    # def set_full_render(self):
-    #     """Render the full curve on the next call to Render."""
-    #     self.set_partial_render(tstart=0.0,tend=1.0)
-
-    # def set_partial_render(self,tend,tstart=0.0):
-    #     """Render the portion of the curve between tstart and tend
-
-    #     Subsequent calls to render after a call to renderPartial
-    #     will display the desired portion of the path.  Any calls to position,
-    #     rotation, etc will be with respect to a bounding box around the full
-    #     path.
-
-    #     To restore the full path, call renderPartial with
-    #     tstart = 0.0 and tend=1.0
-
-    #     Parameters
-    #     ----------
-    #     tend : float
-    #         The ending position of the partial path where 0<=tend<=1.0
-
-    #     tstart : optional float
-    #         The starting position of the partial path where 0.0<=tstart<=1.0
-    #     """
-
-    #     # Check parameters
-    #     if (tend < 0.0 or tend > 1.0 or
-    #         tstart < 0.0 or tstart > 1.0 or tend < tstart):
-
-    #         raise ValueError("tstart and tend must be within 0.0 to 1.0 and " +
-    #                          "tend must be greater than tstart.")
-
-    #     # Restore full path?
-    #     if tstart == 0.0 and tend == 1.0:
-    #         self._partialPath = None
-    #     else:
-
-    #         # Split the original path using PolyBezier.split
-    #         if tstart > 0.0:
-    #             # Take the portion of the original path after tstart
-    #             _ , self._partialPath = self.path.split(tstart)
-    #         else:
-    #             self._partialPath = self.path
-
-    #         # Take the portion of the current partial path before tend
-    #         self._partialPath, _ = self._partialPath.split(
-    #                                                 (tend-tstart)/(1-tstart))

@@ -14,14 +14,14 @@ from .anobject import AnObject, BezierAnObject, ImageAnObject, \
 from .scene import Scene
 
 # Commonly used animation objects
-from .common_anobs import CrossHair, Grid, Circle, Dot, Arc, Arrow, \
-                         DoubleArrow, ArrowHead, Rectangle, Line
-                       
-# LaTex related animation objects
+from .common_anobs import Arc, Arrow, ArrowHead, CrossHair, Circle, Dot, \
+                          DoubleArrow, Grid, Line, Rectangle
+
+# LaTex related animation objectgs
 from .tex_anobject import Text, TexMath, Number, TextBox
 
 # Plotting animation objects
-from .plot_anobs import CoordAxis, CoordGrid
+from .plot_anobs import CoordAxis, CoordGrid, PlotPoints, PlotMark
 
 # Instruction data structures
 from .instruction import Instruction, InstructionTree
