@@ -107,12 +107,6 @@ ArrowHead
 .. autoclass:: ananimlib.ArrowHead
    :members:
 
-EngineerPaper
-^^^^^^^^^^^^^
-
-.. autoclass:: ananimlib.EngineerPaper
-   :members:
-
 Rectangle
 ^^^^^^^^^
 
