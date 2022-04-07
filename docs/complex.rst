@@ -57,6 +57,7 @@ The output from both snippets is the same:
     :class: with-border
     :width: 95%
     :align: center
+
 |    
 
 Both *SetAttribute* and *SlideAttribute* take as parameters the *AnObject*, the name

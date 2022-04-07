@@ -4,10 +4,13 @@ Welcome to *AnAnimLib*
 ============================================================
 .. image:: Logo.gif
   :width: 100%
+
 |
-AnAnimlib, was inspired by `ManimLib <https://github.com/3b1b/manim>`_ by Grant
-Sanderson of 3 Blue 1 Brown.  The aim of AnAnimlib is to facilitate the creation
-of mathematically preceise animations through an intuitive and extensible API.
+
+AnAnimLib was inspired by `ManimLib <https://github.com/3b1b/manim>`_ by Grant
+Sanderson of `3Blue1Brown <https://www.youtube.com/c/3blue1brown>`_.  The aim of
+AnAnimlib is to facilitate the creation of mathematically preceise animations
+through an intuitive and extensible API.
 
 The following code spins a square it as it moves across the canvas.
 
@@ -20,7 +23,7 @@ The following code spins a square it as it moves across the canvas.
     :width: 95%
     :align: center
 
-See the :ref:`Quickstart <quickstart>` for a quick introduction.
+See the :ref:`quickstart` for a quick introduction.
 
 .. toctree::
    :maxdepth: 2
