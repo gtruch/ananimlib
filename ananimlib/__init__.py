@@ -68,10 +68,8 @@ _default_pen = None
 # Instantiate a default animation engine and provide the Animate method
 engine = AnEngine()
 
-
-Animate = engine.run  # Animate is just an alias for AnEngine.run
+Animate = engine.run            # Animate is just an alias for AnEngine.run
 play_movie = engine.play_movie
-
 
 # Provide access to frame rate and frame size parameters
 #frame_rate = get_dict_attr()

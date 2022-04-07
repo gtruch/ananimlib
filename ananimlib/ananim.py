@@ -8,13 +8,12 @@ import ananimlib as al
 import numpy as np
 
 class AnEngine():
-    """The central animation engine
+    """The central animation engine.
 
-    Contains and manages the central animation loop in the *run* method.  
-    
-    Maintains a references to the *Scene* (the set of AnObjects currently being 
-    animated), the *Camera* (generates image frames the *Scene*),  minimal backend that 
-    
+    Contains and the central animation loop and maintains references to the 
+    *Scene* (the set of AnObjects currently being 
+    animated), the *Camera* (generates image frames the *Scene*),  and a 
+    *Backend* (stores a sequence of frames from the camera)
     
     """
 
@@ -81,7 +80,7 @@ class AnEngine():
             
     @property
     def render(self):
-        """True when rendering frames"""
+        """Set to True to render frames"""
         return self._render
 
     @render.setter
@@ -99,27 +98,6 @@ class AnEngine():
         else:
             self._render = False
             self.config_camera(self.width,self.ar,1,self.DPI)
-
-    @property
-    def animation_name(self):
-        """The name of the animation"""
-        return self.backend_ob.outName
-
-    @animation_name.setter
-    def animation_name(self,name):
-        """The name of the animation"""
-        self._animation_name = name
-        self.backend_ob.outName = name
-
-    @property
-    def video_directory(self):
-        """The location of the output video file"""
-        return self.backend_ob.outDir
-
-    @video_directory.setter
-    def video_directory(self,directory):
-        """The location of the output video file"""
-        self.backend_ob.outDir = directory
 
     def config_camera(self,width, ar, frame_rate, DPI):
         """Reconfigure the video settings.
@@ -171,7 +149,17 @@ class AnEngine():
                                                dtype=int)
             self.backend.frame_rate = frame_rate
 
-    def config_backend(self,pw,ph,frame_rate):
+    def reset_scene(self):
+        self.scene = al.Scene(None)
+        self._config_backend(self.width*self.DPI, self.width/self.ar*self.DPI,
+                            self.frame_rate)
+        self.config_camera(self.width,self.ar,self.frame_rate,self.DPI)
+
+    def play_movie(self, repeat=-1):
+        """Have the current backend play the movie"""
+        self.backend.play_movie(repeat)
+
+    def _config_backend(self,pw,ph,frame_rate):
         """Set up the backend so that it can receive frames
 
         Parameters
@@ -183,14 +171,3 @@ class AnEngine():
             The frame rate in frames per second
         """
         self.backend = al.Backend(pw,ph,frame_rate)
-
-
-    def reset_scene(self):
-        self.scene = al.Scene(None)
-        self.config_backend(self.width*self.DPI, self.width/self.ar*self.DPI,
-                            self.frame_rate)
-        self.config_camera(self.width,self.ar,self.frame_rate,self.DPI)
-
-    def play_movie(self, repeat=-1):
-        """Have the current backend play the movie"""
-        self.backend.play_movie(repeat)

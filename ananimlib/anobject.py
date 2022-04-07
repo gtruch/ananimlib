@@ -17,25 +17,17 @@ import numpy as np
 import copy  as cp
 import re
 
-# TODO: Change where bounding box is stored.  
-#    x  Let data be a generic container that render and bounding_box 
-#    x  can act on.
-#    x  bounding_box is an abstract property of AnObject
-
 class AnObject():
-    """Abstract Base Class for all Animation Objects.
+    """Base class for all Animation Objects.
     
-    The Anobject base class defines the interface for AnObjects as used by 
-    the ananimLib animation engine.  It contains the basic coordinate
-    transformation information to transform between internal and external 
-    coordinates based on the position, about_point, rotation, and scale 
-    attributes.  
+    The Anobject base class defines the interface for AnObjects used by 
+    the AnAnimLib animation engine.  
     
-    In Typical usage, a Child class is defined that provides a renderer object 
-    containing a render method. At render time, the animation engine will call 
-    AnObject.render with a copy of the current canvas. The default render 
-    method then calls renderer.render() with the data object and the canvas.  
-    
+    AnObject contains the coordinate transformation information used to 
+    transform between internal data representation and external 
+    coordinates.  Child classes are expected to provide a data object
+    and rendering object.  
+        
     Parameters
     ----------
     data : Object
