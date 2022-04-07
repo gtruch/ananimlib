@@ -1,6 +1,1 @@
-- python=3.7
-- pycairo
-- colour
-- pip
-- pydub
-- pygame
+ananimlib
