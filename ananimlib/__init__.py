@@ -14,7 +14,7 @@ from .anobject import AnObject, BezierAnObject, ImageAnObject, \
 from .scene import Scene
 
 # Commonly used animation objects
-from .common_anobs import Arc, Arrow, ArrowHead, CrossHair, Circle, Dot, \
+from .common_anobs import Arc, Arrow, ArrowHead, CrossHair, Dot, \
                           DoubleArrow, Grid, Line, Rectangle
 
 # LaTex related animation objectgs
