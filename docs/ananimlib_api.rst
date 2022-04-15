@@ -14,7 +14,7 @@ Consider the following script.
 
 On line 3, we call *al.Animate* to render our animation, but where does *Animate*
 come from?  On import, *AnAnimLib* instantiates an :ref:`AnEngine` object labeled
-*engine* into the *AnAnimLib* namespace.  Then, the :ref:`run` method of *engine* is
+*engine* into the *AnAnimLib* namespace.  Then, the *run* method of *engine* is
 mapped to *Animate*.  In otherwords, line 3 of the script above could be
 replaced by
 
