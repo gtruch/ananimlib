@@ -38,15 +38,15 @@ and *SlideAttribute*.
 .. code-block::
     :linenos:
 
-    m = ml.iManim()
+    import ananimlib as al        
 
-    rect = ml.Rectangle([1,1])
+    rect = al.Rectangle([1,1])
 
-    m.run(
-        ml.AddMobject(rect),
-        ml.SetAttribute(rect, "position", [-3,0]),
-        ml.AdjustAttribute(rect, "position", [3,0], duration=1.0),
-        ml.Wait(1.0),
+    al.Animate(
+        al.AddAnObject(rect),
+        al.SetAttribute(rect, "position", [-3,0]),
+        al.SlideAttribute(rect, "position", [3,0], duration=1.0),
+        al.Wait(1.0),
     )
 
     m.play_movie()
@@ -101,5 +101,10 @@ Since *SetAttribute* and *SlideAttribute* operate on an arbitrary attribute, our
 custom instruction need only pass the name of that attribute and any other
 required parameters to the *__init__* method of the parent class.  
 
-
-
+Take as an example a rolling wheel.  To simulate the motion, we need to
+simultaneously update both the object's position and rotation angle. There is a
+mathematical relationship between the position and angular position that must be
+encoded somewhere.  That logic can be encoded either in a custom *AnObject*
+whose position attribute also correctly updates the wheel's rotation angle or,
+it can be encoded in a custom *Instruction* that simultaneously updates
+both attributes of the wheel.

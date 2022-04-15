@@ -29,7 +29,10 @@ See the :ref:`quickstart` for a quick introduction.
    :maxdepth: 2
    :caption: Table of Contents
    
+   install
    quickstart
+   tutorial
    complex
+   technical
    API Reference <ananimlib_api>
    

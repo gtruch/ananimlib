@@ -183,47 +183,57 @@ class SlideAttribute(SetAttribute):
 
     Parameters
     ----------
-    key: str
-        The ID of the object to update
+    key : AnObject or string
+        The ID of the AnObject to update
 
     attribute: string
         The name of the attribute
 
     end_value: type undefined
-        The final value of the attribute.
+        The target value of the attribute.
 
     start_value: optional, type undefined
         The starting value of the attribute.
         If start_value = None, the current value of the attribute is used.
         default = None
 
-    anobject : optional object
-        Provide a direct reference to the object rather than a key.
-        If anobject is None, the key is used to look the object up.
-        If anobject is not None, the key is ignored.
-        default = None
-
     duration: optional, float
         The amount of time in seconds over which to update the attribute.
         default: 0.0
+
+    relative: optional, boolean
+        Set to True if the end value should be relative to the current 
 
     transfer_func: callable
         A function that maps alpha to a new ratio between 0 and 1
         ratio = transfer_func(alpha)
         default = smooth
 
-    nextInstructions: List of instructions
-        The subsequent branches in the instruction tree.
+    anobject : optional AnObject
+        Provide a direct reference to the object rather than a key.
+        If anobject is None, the key is used to look the object up.
+        If anobject is not None, the key is ignored.
+        default = None
+
     """
 
-    def __init__(self, key, attribute,
-                 end_value, start_value=None,
-                 anobject = None,
-                 duration = 0.0,
-                 transfer_func=al.smooth):
+    # ToDo: Add a relative flag with the following logic: 
+    #       start_value = anobject.attribute
+    #       if relative is True
+    #           end_value   = start_value+end_value
+    #       else 
+    #           
+    
+    def __init__(self, key, attribute, end_value, 
+                 start_value   = None,
+                 duration      = 0.0,
+                 relative      = False,
+                 transfer_func = al.smooth,                 
+                 anobject      = None):
 
         self.end_value = end_value
         self.start_value = start_value
+        self.relative = relative
         super().__init__(key           = key,
                          attribute     = attribute,
                          value         = self._iliketomoveitmoveit,
@@ -234,10 +244,11 @@ class SlideAttribute(SetAttribute):
     def start(self,scene):
         super().start(scene)
 
-        # Hmm... have to think more carefully about the start and end values
-
         if self.start_value is None:
             self.start_value = getattr(self.anobject,self.attribute)
+            
+        if self.relative:
+            self.end_value += self.start_value
 
         # Callable start and end values don't work here...
         if callable(self.end_value):

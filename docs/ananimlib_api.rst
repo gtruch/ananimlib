@@ -354,8 +354,8 @@ SlideAttribute
 .. autoclass:: ananimlib.SlideAttribute
    :members:
 
-Base Instructions
------------------
+Base Instruction Classes
+------------------------
 
 Instruction
 ^^^^^^^^^^^

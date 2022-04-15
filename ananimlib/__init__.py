@@ -14,7 +14,7 @@ from .anobject import AnObject, BezierAnObject, ImageAnObject, \
 from .scene import Scene
 
 # Commonly used animation objects
-from .common_anobs import Arc, Arrow, ArrowHead, CrossHair, Dot, \
+from .common_anobs import Arc, Arrow, ArrowHead, CrossHair, Circle, Dot, \
                           DoubleArrow, Grid, Line, Rectangle
 
 # LaTex related animation objectgs
@@ -45,7 +45,8 @@ from .search import Bisect, Newton
 from .bezier import BezierCurve, PolyBezier, SVGPolyBezier
 
 # Rendering classes
-from .render import BezierRender, CompositeRender, ImageRender, CairoRender, Pen               
+from .render import Render, BezierRender, CompositeRender, ImageRender, \
+                    CairoRender, Pen               
 
 # The camera 
 from .camera import Camera

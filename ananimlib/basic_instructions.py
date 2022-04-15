@@ -164,7 +164,33 @@ class Move(al.SlideAttribute):
 
 
 class Rotate(al.SlideAttribute):
-    """Absolute rotation of a anobject wrt its default orientation.
+    """Relative rotation of a anobject.
+
+    Parameters
+    ----------
+    key : dict key
+        The name of the anobject to be moved
+
+    angle : float
+        The new rotation angle in radians
+
+    duration : optional float
+        The amount of time over which to rotate the anobject.
+        default = 0.0, instantaneous
+    """
+
+    def __init__(self,key,angle,duration=0.0,
+                 transfer_func=al.smooth):
+        super().__init__(key        = key,
+                         attribute  = 'rotation_angle',
+                         end_value  = angle,
+                         relative   = True,
+                         duration   = duration,
+                         transfer_func = transfer_func)
+        
+
+class RotateTo(al.SlideAttribute):
+    """Absolute rotation of a anobject.
 
     Parameters
     ----------

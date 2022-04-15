@@ -48,7 +48,17 @@ class CairoRender(Render):
         self.render = self.parent_render
 
 
-
+    # ToDo: This rendering relationship could be implemented (more sanely?) 
+    #       as a decorator.  
+    #       Currently, we are wrapping coordinate transform manipulations 
+    #       around a call to the actual rendering code and using inheritance 
+    #       to map to the correct 'child' renderer.  
+    # 
+    #       Since the matrix manipulation is independent of the individual 
+    #       renderers, they could be passed in dynamically by the caller through 
+    #       the use of a decorator. 
+    #
+    #       Currently in the "It ain't broke" category.  
     def parent_render(self,anobject,camera):
         """Universal Cairo rendering
 
@@ -56,8 +66,6 @@ class CairoRender(Render):
         Set the clip region
         call the child render
         """
-
-
         # Be a good citizen and save the existing context state
         camera.context.save()
 

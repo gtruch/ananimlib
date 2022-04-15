@@ -93,6 +93,7 @@ You can refer to *AnObjects* in the scene either by reference or by key, if one 
 .. image:: quickstart_ex3.gif
     :width: 95%
     :align: center
+
 | 
 
 The *RunParallel* instruction can be combined with the *RunSequential*
@@ -107,6 +108,7 @@ while simultaneously executing a full rotation.
 .. image:: quickstart_ex4.gif
     :width: 95%
     :align: center
+
 |
 
 
@@ -121,6 +123,7 @@ from simpler instructions.
 .. image:: quickstart_ex8.gif
     :width: 95%
     :align: center
+
 |
 
 
@@ -149,6 +152,7 @@ about point to make it easier to see how the rotation relates to the about point
 .. image:: quickstart_ex6.gif
     :width: 85%
     :align: center
+
 |
 
 The about point is defined with respect to the AnObject's internal coordinate
@@ -174,7 +178,7 @@ Here's the output again with the coordinate grid and the about point displayed.
 
 
 The Composite AnObject
----------------------
+----------------------
 
 *CompositAnObject* contains a collection of *AnObjects* which can then be
 manipulated separately or as a group.  Here's an example:

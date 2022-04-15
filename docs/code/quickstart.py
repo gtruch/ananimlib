@@ -9,8 +9,6 @@ Generate all figures for the Quickstart chapter
 from collections import namedtuple
 from os import path
 
-
-
 import ananimlib as al
 
 
@@ -19,10 +17,17 @@ base_path = '../'
     
 def main():
     
+    # Manually fiddle with the engine's camera settings
     al.engine.frame_rate = 50
     al.engine.DPI = 50
-    al.engine.reset_scene()
+
+    # Becase we changed the frame size by altering the DPI, we have to call
+    # AnEngine.reset() to propagate the changes.  
+    # reset also discards any existing frames.
+    al.engine.reset_scene()     
     
+    # ToDo: Move these two lines into tests
+    #       Checking to make sure the above lines work as intended.
     assert(al.engine.scene.camera.frame_rate  == 50)
     assert(al.engine.backend.frame_rate == 50)
         
