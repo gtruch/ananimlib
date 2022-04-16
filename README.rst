@@ -33,7 +33,7 @@ As a simple example, the following code spins a square it as it moves across the
     al.play_movie()
 
 
-.. image:: quickstart_ex3.gif
+.. image:: docs/images/quickstart_ex3.gif
     :width: 95%
     :align: center
  
