@@ -5,17 +5,48 @@ Tutorial: The AnAnimLib Logo
 ============================
 
 One of the best ways to learn a new library is to do a project.  This tutorial
-is a trip through the way that I think about creating animations. It is only one
-possible work flow.  I am certain that this library could be twisted in a
-variety of vile and perverse ways that I am completely unaware of.  If you know
-of any, please share them!  At any rate, what follows is how I work.
+is a trip through the way that I think about creating animations. As such, it is
+only one possible work flow and I am certain that this library could be twisted
+in a variety of vile and perverse ways that I am completely unaware of.  If you
+know of any, please share them!  At any rate, what follows is how I work.
+
+.. caution::
+
+  Tutorials (this one included) are intened to introduce new users to a library
+  by by leading them through a fully formed solution to a prototypical problem.
+  This  approach, while logical, unintentionally presents said solution as though
+  it sprang into existance fully formed, a fact that anyone who builds things
+  knows is absurd.  
+
+  As my great grandaddy, a famed **SuperWidget** builder, would say to anyone
+  who would listen: "The only way to master **SuperWidget** building is to
+  *fail* at building a *lot* of **SuperWidgets**."  Then he'd brag about the
+  number fingers he lost in various **SuperWidget** accidents.  You know. To
+  show how many times he failed. 
+
+  Or, as my friends in the *Fortnight* forums say when asked how to win at Battle
+  Royale:  "Git gud!"  which translates roughly to: "Play a bunch.  Die
+  a bunch. Then, figure out how to not die so much.  Then... Die less."  You know.  Lose
+  a finger.  
+  
+  Grand Daddy and the Fortnight trolls are saying the same thing:  The path to
+  mastery is through failure. Along the way, you might lose a finger.  You might
+  might even get some bad feels because a mean troll keeps killing you.  And
+  that's just fine. Every lost finger or death by obnoxious adolescent is a
+  lesson learned.  Or something.  Great Grandad would know.  
+
+  The point is, nobody writes about the failures because we would look foolish!
+  Some brave soul should rise to the occasion and write an honest tutorial that
+  highlights the lessons learned at the absolute lowest point in the project
+  cycle, because that is where all of the learning happened.  I am not that
+  person.  So, let us put on our rose colored glasses and have a look.
 
 Part 1: *SlideyBox*
 ^^^^^^^^^^^^^^^^^^^
 As a thought exercise, look at the AnAnimLib logo as if you were simply
 imagining it and wanted to build it.  It certainly started life that way.  
 
-.. image:: Logo.gif
+.. image:: images/Logo.gif
   :width: 50%
 
 Looking at the animation now, the hypnotic motion of the little box as it
@@ -34,7 +65,7 @@ smallest and simplest possible pieces. In this case, my smashing arrived at:
   :end-before: # END1
   :linenos:
 
-.. image:: tutorial_snip1.gif
+.. image:: images/tutorial_snip1.gif
   :width: 80%
   :align: center
 
@@ -52,7 +83,7 @@ Great.  Now, we make it rotate.
   :end-before: # END2
   :linenos:
 
-.. image:: tutorial_snip2.gif
+.. image:: images/tutorial_snip2.gif
   :width: 80%
   :align: center
 
@@ -70,7 +101,7 @@ remain staionary.  Here is our rough draft.
   :end-before: # END3
   :linenos:
 
-.. image:: tutorial_snip3.gif
+.. image:: images/tutorial_snip3.gif
   :width: 80%
   :align: center
 
@@ -95,7 +126,7 @@ the results of the *RunSequential* call.
   :end-before: # END4
   :linenos:
 
-.. image:: tutorial_snip4.gif
+.. image:: images/tutorial_snip4.gif
   :width: 80%
   :align: center
 
@@ -112,7 +143,7 @@ time for some restructing before things get out of hand.
   :end-before: # END5
   :linenos:
 
-.. image:: tutorial_snip5.gif
+.. image:: images/tutorial_snip5.gif
   :width: 80%
   :align: center
 

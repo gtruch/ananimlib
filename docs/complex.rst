@@ -53,7 +53,7 @@ and *SlideAttribute*.
 
 The output from both snippets is the same:
 
-.. figure:: quickstart_ex2.gif
+.. figure:: images/quickstart_ex2.gif
     :class: with-border
     :width: 95%
     :align: center

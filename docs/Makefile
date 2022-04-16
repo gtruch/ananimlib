@@ -11,11 +11,15 @@ BUILDDIR      = _build
 PYTHON        = python
 PYTHONOPTS	  = -m
 
+FIGURES       = tutorial_snip1.gif tutorial_snip2.gif tutorial_snip3
+
 # Put it first so that "make" without argument is like "make help".
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 .PHONY: help Makefile
+
+FIGURES: 
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).

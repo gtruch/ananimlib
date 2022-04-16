@@ -2,7 +2,7 @@
 ============================================================
 Welcome to *AnAnimLib*
 ============================================================
-.. image:: Logo.gif
+.. image:: images/Logo.gif
   :width: 100%
 
 |
@@ -19,11 +19,12 @@ The following code spins a square it as it moves across the canvas.
   :end-before: # END
   :linenos:
 
-.. image:: quickstart_ex3.gif
+.. image:: images/quickstart_ex3.gif
     :width: 95%
     :align: center
 
 See the :ref:`quickstart` for a quick introduction.
+
 
 .. toctree::
    :maxdepth: 2

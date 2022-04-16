@@ -15,7 +15,7 @@ A minimal animation script looks something like this:
 The output is a one second "animation" of the outline of a white 
 rectangle sitting motionless in the center of the canvas.
 
-.. image:: quickstart_ex1.gif
+.. image:: images/quickstart_ex1.gif
     :width: 95%
     :align: center
 
@@ -69,7 +69,7 @@ Let's make it move across the canvas.
 
 Here's the output
 
-.. image:: quickstart_ex2.gif
+.. image:: images/quickstart_ex2.gif
   :width: 95%
   :align: center
 
@@ -90,7 +90,7 @@ AddAnObject on Line 6. We also passed a reference to the instructions at
 line 7, 9, and 10 rather than the String based key that we used in the previous example.  
 You can refer to *AnObjects* in the scene either by reference or by key, if one was assigned.  
 
-.. image:: quickstart_ex3.gif
+.. image:: images/quickstart_ex3.gif
     :width: 95%
     :align: center
 
@@ -105,7 +105,7 @@ while simultaneously executing a full rotation.
   :end-before: # END
   :linenos:
 
-.. image:: quickstart_ex4.gif
+.. image:: images/quickstart_ex4.gif
     :width: 95%
     :align: center
 
@@ -120,7 +120,7 @@ from simpler instructions.
   :end-before: # END
   :linenos:
 
-.. image:: quickstart_ex8.gif
+.. image:: images/quickstart_ex8.gif
     :width: 95%
     :align: center
 
@@ -142,14 +142,14 @@ respect to an *AnObject*'s about point.
   :end-before: # END
   :linenos:
 
-.. image:: quickstart_ex5.gif
+.. image:: images/quickstart_ex5.gif
     :width: 85%
     :align: center
     
 Below, we display the underlying coordinate grid as well as the rectangle's
 about point to make it easier to see how the rotation relates to the about point.
 
-.. image:: quickstart_ex6.gif
+.. image:: images/quickstart_ex6.gif
     :width: 85%
     :align: center
 
@@ -166,13 +166,13 @@ the center of the rectangle at [2,1] with respect to the main coordinate grid.
   :end-before: # END
   :linenos:
 
-.. image:: quickstart_ex5_1.gif
+.. image:: images/quickstart_ex5_1.gif
   :width: 85%
   :align: center
 
 Here's the output again with the coordinate grid and the about point displayed.
 
-  .. image:: quickstart_ex6_1.gif
+  .. image:: images/quickstart_ex6_1.gif
     :width: 85%
     :align: center
 
@@ -202,6 +202,6 @@ manipulated separately or as a group.  Here's an example:
 - Finally, the MoveTo on line 19 moves the entire composite back to the origin of the 
   main canvas.  
 
-.. image:: quickstart_ex7.gif
+.. image:: images/quickstart_ex7.gif
   :width: 95%
   :align: center
