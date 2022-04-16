@@ -3,7 +3,7 @@
 Welcome to *AnAnimLib*
 ============================================================
 
-.. image:: docs/Logo.gif
+.. image:: docs/images/Logo.gif
   :width: 100%
 
 |
