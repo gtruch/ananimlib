@@ -10,7 +10,7 @@ from os import path
 import ananimlib as al
 import tutorial  as tut_module
 
-base_path = '../'
+base_path = '../images'
 
     
 def main():

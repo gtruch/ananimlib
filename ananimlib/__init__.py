@@ -17,7 +17,7 @@ from .scene import Scene
 from .common_anobs import Arc, Arrow, ArrowHead, CrossHair, Circle, Dot, \
                           DoubleArrow, Grid, Line, Rectangle
 
-# LaTex related animation objectgs
+# LaTex related animation objects
 from .tex_anobject import Text, TexMath, Number, TextBox
 
 # Plotting animation objects
@@ -68,12 +68,11 @@ _default_pen = None
 
 # Instantiate a default animation engine and provide the Animate method
 engine = AnEngine()
+Animate = engine.run            # Animate is an alias for AnEngine.run
 
-Animate = engine.run            # Animate is just an alias for AnEngine.run
+# Create alias for engine.play_movie
 play_movie = engine.play_movie
 
-# Provide access to frame rate and frame size parameters
-#frame_rate = get_dict_attr()
 
 
 

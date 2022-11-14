@@ -12,6 +12,8 @@ import numpy as np
 import hashlib
 import os
 from xml.dom import minidom
+import pdb
+import subprocess as subp
 
 # TODO: Some doc-strings would be nice hey?
 # TODO: Add functionality to easily access each glyph for manipulation
@@ -151,14 +153,19 @@ class Text(al.SVGAnObject):
                 "-interaction=batchmode",
                 "-halt-on-error",
                 "-output-directory=\"{}\"".format(base),
-                "\"{}\"".format(file),
-                ">",
-                os.devnull
+                "\"{}\"".format(file)
+                # ">",
+                # os.devnull
             ]
-            exit_code = os.system(" ".join(commands))
-            if exit_code != 0:
+            cp = subp.run(commands, capture_output=True)
+#            exit_code = os.system(" ".join(commands))
+#            if exit_code != 0:
+            if cp.returncode != 0:
+#                pdb.set_trace()
                 log_file = tex_file.replace(".tex", ".log")
+                # print(os.getcwd())
                 raise Exception(
+                    f'{cp.stdout}' +
                     "Latex error converting to dvi. " +
                     "See log output above or the log file: %s" % log_file)
         return os.path.join(base,result)

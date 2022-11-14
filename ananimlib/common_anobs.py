@@ -347,7 +347,7 @@ class Dot(Circle):
     def __init__(self,radius=0.1,pen=None):
         if pen is None:
             pen = al.Pen(fill_color="#cda448", fill_opacity=1.0)
-            super().__init__(radius,pen=pen)
+        super().__init__(radius,pen=pen)
 
 class DoubleArrow(Arrow):
 

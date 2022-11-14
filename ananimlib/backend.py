@@ -35,7 +35,7 @@ class Backend():
 
 
         # Initialize pygame
-        pg.init()
+#        pg.init()
 
 
         self.frames = []
@@ -90,11 +90,12 @@ class Backend():
         If a different frame rate is used, the closest possible integer delay 
         will be selected as round(100/frame_rate)
         """
-        
+        print("save_gif entered")
         # Convert the frames to a list of PIL images
         images = [Image.fromarray(f) for f in self.frames]
         
         # Write the images to a gif
+        print(f"Saving: {fname}")
         images[0].save(fname,"GIF",save_all=True,
                        append_images=images[1:], loop=0,optimize=False,disposal=1,
                        duration = int(np.round(1000/self.frame_rate)))
@@ -117,6 +118,9 @@ class Backend():
         # Calculate time between frames in milliseconds
         frameTime = (1/self.frame_rate)*1e3
 
+
+        # Clear any queued events before starting the playback.
+        pg.event.clear()
         while not done:   # Some event triggers done
             start_time = pg.time.get_ticks()
 
@@ -148,7 +152,9 @@ class Backend():
                 if event.type == pg.KEYDOWN:
                     if event.key == pg.K_ESCAPE:
                         done = True
+
         pg.display.quit()
+ 
 
     def __del__(self):
         pg.quit()
@@ -160,7 +166,7 @@ class MP4Backend():
     """
 
     def __init__(self,pixel_width,pixel_height,frame_rate,
-                  outName,outDir=".\\",showVideo=False):
+                  outName,outDir="./",showVideo=False):
         """Get ready to write mp4s!
 
         Parameters
@@ -177,7 +183,7 @@ class MP4Backend():
 
         outDir : optional, str
             The output path.
-            default = '.\\'
+            default = './'
 
         """
         self.outName = outName

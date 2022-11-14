@@ -214,6 +214,15 @@ class RotateTo(al.SlideAttribute):
                          transfer_func = transfer_func)
 
 
+class Trace(al.SetAttribute):
+    """Follow an AnObject and remember its path
+    
+    """
+    
+    def __init__(self):
+        pass
+
+
 class Scale(al.SlideAttribute):
     """Scale a anobject.
 
@@ -548,13 +557,13 @@ class AlignWithPath(al.SetAttribute):
         default = 0.0
     """
     
-    def __init__(self,key,path, end_points, duration=0.1,transfer_func=al.linear):
+    def __init__(self,key,path, end_points=None, duration=0.1,transfer_func=al.linear):
         self.key      = key
         self.path     = path
         self.duration = duration
 
         if end_points is None:
-            self.end_point = [0.0,1.0]
+            self.end_points = [0.0,1.0]
         else:
             self.end_points = end_points
 
@@ -576,6 +585,7 @@ class AlignWithPath(al.SetAttribute):
         theta2 = np.arctan2(slope[1],slope[0])*180/np.pi
 
         return al.Vector(slope).theta
+
 
         
 
@@ -741,7 +751,7 @@ class DrawText(al.InstructionTree):
         mob = scene.get_anobject(self.key)
 
         # Split the requested draw time equally between each glyph.
-        dt = self.duration/len(mob.data.keys())
+        dt = self.duration/len(mob)
 
         if isinstance(self.key,list):
             kkey=cp.copy(self.key)

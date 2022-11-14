@@ -191,7 +191,6 @@ def tutorial_snip5():
     al.Animate(
         al.AddAnObject(box),
         wave_attr(box, 'slope', math.pi/4,duration=1.0),
-        al.Wait(1.0)
     )
    
 
@@ -266,8 +265,38 @@ def wave(key,wave_angle,duration):
 
 # END5
 
+
+
+# START6
+
+import math
+import ananimlib as al
+
+def tutorial_snip6():
+    
+    wave_angle=60                   # Wave angle in degrees
+    wave_angle *=  math.pi/180      # Convert to radians
+
+    box = SlideyBox()
+    box.position=[2,0]
+
+
+    al.Animate(
+        al.AddAnObject(box),
+        al.RunParallel(
+            wave_attr(box, 'slope', math.pi/4,duration=2.0),
+            al.RunSequential(
+                al.Move(box, [-4,  0],duration=1.0),
+                al.Move(box, [ 4,  0],duration=1.0)
+            )
+        )
+    )
+
+# END6
+
+
 if __name__=="__main__":
-    tutorial_snip5()
+    tutorial_snip6()
     al.play_movie()
     
     

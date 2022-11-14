@@ -451,7 +451,10 @@ class CompositeAnObject(AnObject):
 
     def __init__(self,anobjects=None,names=None):
 
+        super().__init__({}, al.CompositeRender())
+
         self.clear()
+        
 
         # self.anobjects = {}      # a dictionary with the anobjects.
         # self.keys = []           # a simple list of keys to remember the 
@@ -467,7 +470,6 @@ class CompositeAnObject(AnObject):
             for mob,name in zip(anobjects,names):
                 self.add_anobject(mob,name)
 
-        super().__init__(self.anobjects, al.CompositeRender())
 
     def clear(self):
         self.anobjects = {}      # a dictionary with the anobjects.
@@ -540,20 +542,26 @@ class CompositeAnObject(AnObject):
                 self.key_lookup[anobject] = key     # Reverse dictionary
                 self.keys.append(key)               # Key list to maintain 
                                                     #          insertion order
+                                                    
+                # Fix the transformation matrix
+                if update_transform:
+                    anobject.position -= self.position
+                    anobject.scale /= self.scale
+                    
                 
         elif len(path) == 0:                      # ignore empty path
-            self.add(anobject,key)
+            self.add_anobject(anobject,key)
         else:
             
             # Recursively walk the path
-            next_target = self.get(path[0])       # Follow forward link
+            next_target = self.get_anobject(path[0])       # Follow forward link
             next_path   = path[1:]                # Split the path
             
             if len(next_path) == 0:               # Set empty path to None
                 next_path = None
                                 
             # Call the add method of the next target.
-            next_target.add(anobject, key, next_path)
+            next_target.add_anobject(anobject, key, next_path)
             
     def get_anobject(self,key):
         """Get a reference to an AnObject that's in the composite

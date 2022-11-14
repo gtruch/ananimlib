@@ -50,3 +50,6 @@ def test_PolyBezier_T_2D():
         # Check the results
         np.testing.assert_allclose(u_recovered, u_orig,rtol=0,atol=1e-7)
 #test_PolyBezier_T()
+
+if __name__=="__main__":
+    test_PolyBezier_T_2D()

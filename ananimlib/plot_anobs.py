@@ -115,6 +115,15 @@ class CoordGrid(al.CompositeAnObject):
     def _build(self):
         
         self.clear()
+        
+        # Put the background rectangle in 
+#        self.add_anobject(al.Rectangle(
+#                            size = self.screen_size,
+#                            pen  = al.Pen(fill_color="#101010",
+#                                          fill_opacity=1.0,
+#                                          stroke_opacity=0.0)))
+        
+        
 
         outline = al.Rectangle(self.grid_size,pen=self.major_pen)
 
@@ -144,9 +153,9 @@ class CoordGrid(al.CompositeAnObject):
         minor.about_point = minor.about_point + self.offset
         minor.position = [0,0]
 
-        self.add_anobject(minor,"minor")
-        self.add_anobject(major,"major")
-        self.add_anobject(outline,"outline")
+        self.add_anobject(minor,    "minor", update_transform=False)
+        self.add_anobject(major,    "major", update_transform=False)
+        self.add_anobject(outline,"outline", update_transform=False)
 
 
         min_axis_value = -self.grid_size/2.0-self.offset
@@ -177,13 +186,13 @@ class CoordGrid(al.CompositeAnObject):
                                  [xpos,max_axis_value[1]]])
 
         axis = al.BezierAnObject(axis_path,pen=self.axis_pen)
-        self.add_anobject(axis,"axis")
+        self.add_anobject(axis,"axis", update_transform=False)
 
 
         # Create x-axis tick labels at the major grid lines. 
         # First major grid line is at zero.
         n_start = np.ceil(min_axis_value[0]/self.major_spacing[0])
-        n_stop  = np.floor(max_axis_value[0]/self.major_spacing[0])
+        n_stop  = np.floor(max_axis_value[0]/self.major_spacing[0])+self.major_spacing[0]
         self.text_labels = []
         for num in np.arange(n_start,n_stop)*self.major_spacing[0]:
             if np.round(num,3) <= max_axis_value[0]:
@@ -191,7 +200,7 @@ class CoordGrid(al.CompositeAnObject):
                 text = al.Text(_num,pen=self.text_pen)
                 text.position = [num,-0.15+ypos]
                 text.scale = [0.3*self.scale[1]/self.scale[0], 0.3]
-                self.add_anobject(text)
+                self.add_anobject(text, update_transform=False)
 
         # y-axis tick labels
         for num in np.arange(min_axis_value[1],
@@ -202,7 +211,7 @@ class CoordGrid(al.CompositeAnObject):
                 text.about_right()
                 text.position = [-0.1+xpos,num]
                 text.scale = [0.3*self.scale[1]/self.scale[0],0.3]
-                self.add_anobject(text)
+                self.add_anobject(text, update_transform=False)
                 
 
 

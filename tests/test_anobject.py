@@ -11,8 +11,7 @@ import pytest
 @pytest.fixture
 def container():
     import ananimlib as al
-    al.AnObjectContainer()
-    return al.AnObjectContainer()
+    return al.CompositeAnObject()
 
 @pytest.fixture
 def anobject():
@@ -66,7 +65,7 @@ def test_CompositeAnObject_index_by_key():
     # Retrieve it and make sure the same object comes out
     assert(comp["thing"] is thing)    
     
-def test_CompositeMobject_index_by_mobject_no_key():
+def test_CompositeAnObject_index_by_anobject_no_key():
     import ananimlib as al
         
     # Create the composite
@@ -81,7 +80,7 @@ def test_CompositeMobject_index_by_mobject_no_key():
     # Retrieve it and make sure the same object comes out
     assert(comp[thing] is thing)    
     
-def test_CompositeMobject_index_by_mobject_with_key():
+def test_CompositeAnObject_index_by_anobject_with_key():
     import ananimlib as al
         
     # Create the composite
@@ -96,7 +95,7 @@ def test_CompositeMobject_index_by_mobject_with_key():
     # Retrieve it and make sure the same object comes out
     assert(comp[thing] is thing)    
     
-def test_CompositeMobject_index_by_iterable():
+def test_CompositeAnObject_index_by_iterable():
     import ananimlib as al
         
     # Create two composites
@@ -113,14 +112,14 @@ def test_CompositeMobject_index_by_iterable():
     # Retrieve it and make sure the same object comes out
     assert(comp2["comp1","thing"] is thing)    
 
-def test_CompositeMobject_index_by_iterable_of_mobjects():
+def test_CompositeAnObject_index_by_iterable_of_anobjects():
     import ananimlib as al
         
     # Create two composites
     comp1 = al.CompositeAnObject()
     comp2 = al.CompositeAnObject()
     
-    # Create a mobject to add
+    # Create anobject to add
     thing = al.BezierAnObject()
     
     # Add it to the composite

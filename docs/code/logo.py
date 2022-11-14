@@ -9,14 +9,17 @@ import numpy      as np
 import ananimlib  as al
 import simulation as sim
 
+
+
+    
 def main():
     
     
     # Tune the camera parameters
-    al.engine.config_camera(width = 11, 
-                            ar    = 11/7, 
-                            frame_rate = 50, 
-                            DPI = 55)    
+    al.engine.config_camera(width = 16, 
+                            ar    = 16/7, 
+                            frame_rate = 15, 
+                            DPI = 120)    
     
     al.Animate(
 
@@ -173,8 +176,12 @@ class SlidyBox(al.CompositeAnObject):
         self.add_anobject(fn,"fn")
 
         # Build the mg arrow and label
-        mg = al.CompositeAnObject([ al.Arrow([0.0,-0.0],[0.0,-.5],head_size=arrow_head_size,
-                       pen = al.Pen(stroke_width = arrow_stroke_width))])
+        # mg = al.CompositeAnObject([ al.Arrow([0.0,-0.0],[0.0,-.5],head_size=arrow_head_size,
+        #                pen = al.Pen(stroke_width = arrow_stroke_width))])
+
+        mg = al.CompositeAnObject()
+        mg.add_anobject(al.Arrow([0.0,-0.0],[0.0,-.5],head_size=arrow_head_size,
+                       pen = al.Pen(stroke_width = arrow_stroke_width)))
         glabel = al.TexMath("m \\vec g")
         glabel.scale=label_scale
         mg.add_anobject(glabel)

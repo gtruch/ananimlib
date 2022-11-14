@@ -1,0 +1,19 @@
+[I 220922 10:51:38 server:335] Serving on http://127.0.0.1:5500
+[I 220922 10:51:38 handlers:62] Start watching changes
+[I 220922 10:51:38 handlers:64] Start detecting changes
+[W 220922 11:17:08 web:2239] 404 GET /favicon.ico (127.0.0.1) 3.77ms
+[I 220922 11:17:08 handlers:135] Browser Connected: http://127.0.0.1:5500/
+[W 220922 11:17:14 web:2239] 404 GET /images/tutorial_snip1.gif (127.0.0.1) 4.20ms
+[W 220922 11:17:14 web:2239] 404 GET /images/tutorial_snip2.gif (127.0.0.1) 3.62ms
+[W 220922 11:17:14 web:2239] 404 GET /images/tutorial_snip3.gif (127.0.0.1) 5.96ms
+[W 220922 11:17:15 web:2239] 404 GET /images/tutorial_snip3.gif (127.0.0.1) 3.36ms
+[W 220922 11:17:15 web:2239] 404 GET /images/tutorial_snip1.gif (127.0.0.1) 5.67ms
+[W 220922 11:17:15 web:2239] 404 GET /images/tutorial_snip2.gif (127.0.0.1) 3.06ms
+[I 220922 11:17:15 handlers:135] Browser Connected: http://127.0.0.1:5500/tutorial.html
+[W 220922 11:18:40 web:2239] 404 GET /images/tutorial_snip1.gif (127.0.0.1) 2.57ms
+[W 220922 11:18:40 web:2239] 404 GET /images/tutorial_snip2.gif (127.0.0.1) 2.53ms
+[W 220922 11:18:40 web:2239] 404 GET /images/tutorial_snip3.gif (127.0.0.1) 5.23ms
+[W 220922 11:18:41 web:2239] 404 GET /images/tutorial_snip1.gif (127.0.0.1) 3.66ms
+[W 220922 11:18:41 web:2239] 404 GET /images/tutorial_snip2.gif (127.0.0.1) 2.66ms
+[W 220922 11:18:41 web:2239] 404 GET /images/tutorial_snip3.gif (127.0.0.1) 5.58ms
+[I 220922 11:18:41 handlers:135] Browser Connected: http://127.0.0.1:5500/tutorial.html

@@ -24,7 +24,7 @@ know of any, please share them!  At any rate, what follows is how I work.
   number fingers he lost in various **SuperWidget** accidents.  You know. To
   show how many times he failed. 
 
-  Or, as my friends in the *Fortnight* forums say when asked how to win at Battle
+  Or, as my friends in the *Fortnight* forums say when asked how to win a Battle
   Royale:  "Git gud!"  which translates roughly to: "Play a bunch.  Die
   a bunch. Then, figure out how to not die so much.  Then... Die less."  You know.  Lose
   a finger.  
@@ -133,10 +133,11 @@ the results of the *RunSequential* call.
 |
 
 The output looks pretty solid.  The issue now (for me anyway) is that the main
-body of the script is over 50 lines and I don't like thinking about that lines
-many at one time.  Also, We ulitimately want to make that little box slide down
-a hill, which is going to be tough with the code written the way it is.  It is
-time for some restructing before things get out of hand.  
+body of the script is over 50 lines and I don't like thinking about that many
+lines of code at one time.  Also, we want to make that little box with its
+attendant arrows slide down a hill while it rotates, which is going to be tough
+with the code written the way it is.  Time for some restructing before things
+get out of hand.  Here are my changes:
 
 .. literalinclude:: ./code/tutorial.py
   :start-after: # START5
@@ -152,15 +153,48 @@ time for some restructing before things get out of hand.
 This program (it has functions and classes and stuff so it's not just a "script"
 anymore)  has identical output, but we made a lot of structural changes. 
 
-* On Lines 4-15 we have created a function called *tutorial_snip5* that contains
-  the call to *Animate* so that no code exists outside of a function or class,
-  other than the imports at the top and some code at the bottom that calls the
-  function. 
+On Lines 4-15 we have created a function called *tutorial_snip5* as the entry
+point to our animation.    It follows the familiar pattern of creating some
+assets and then animating them with a call to *Animate*, but it only creates one
+*AnObject* called *SlideyBox* and the call to *Animate* has only three
+instructions.  
+  
+Starting on Line 18, we define the new *SlideyBox* class.  It is a
+*CompositeAnObject*, which is essentially a container that holds a set of one or
+more other *AnObjects*, any of which could also be a *CompositeAnobject*. All of
+the setup code from our previous example is in *SlideyBox.__init__*. In Lines
+51-53 the arrows and the box get added to the composite.  Then, they
+automatically get added to the scene when the composite itself is added.  
+
 
 * In *tutorial_snip*, we create only one *AnObject* called *SlideyBox* and the
   call to *Animate* has only three *Instructions*, two of which are the familiar
   *AddAnObject* and *Wait* instructions and a third called *wave_attr*.  
 
-* The definition of *SlideyBox* begins on Line 18.  It is a *CompositeAnObject*, which is essentially a container that holds a set of anobjects.  We put all of the setup code
-  from the previous example into *SlideyBox.__init__* 
+* The definition of *SlideyBox* begins on Line 18.  
+
+.. literalinclude:: ./code/tutorial.py
+  :start-after: # START6
+  :end-before: # END6
+  :linenos:
+
+.. image:: images/tutorial_snip6.gif
+  :width: 80%
+  :align: center
+
+|
+
+Part 2: Plotting
+^^^^^^^^^^^^^^^^
+
+
+
+Part 3: Physics
+^^^^^^^^^^^^^^^
   
+Part 4: Action!
+^^^^^^^^^^^^^^^
+
+Part 5: Text Overlay
+^^^^^^^^^^^^^^^^^^^^
+

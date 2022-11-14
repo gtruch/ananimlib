@@ -24,6 +24,11 @@ LaTex
 Text and math animations require access to an installation of LaTex.  We have had good luck with texLive on
 Linux or MikeTex on Windows.
 
+standalone.cls is in texlive-latex-extra
+dsfont.sty is in texlive-fonts-extra
+physics.sty is in texlive-science
+
+
 ffmpeg
 ^^^^^^
 
