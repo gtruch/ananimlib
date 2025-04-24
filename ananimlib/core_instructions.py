@@ -14,6 +14,20 @@ import ananimlib as al
 
 import copy as cp
 
+class ExecuteFunction(al.Instruction):
+
+    def __init__(self,func, args=(), kwargs={}):
+        self.func = func
+        self.args = args
+        self.kwargs = kwargs
+        self.finished = False
+        self.frame_changed = False
+        super().__init__()
+
+    def update(self,scene,dt):
+        self.func(*self.args,**self.kwargs)
+        self.finished = True
+        return 0.0
 
 class RunSequential(al.InstructionTree):
     """Chains a tuple of Instrucions to execute sequentially.
@@ -22,22 +36,31 @@ class RunSequential(al.InstructionTree):
     ----------
     *instruction : tuple of Instructions
         The instructions to run
+
+    start_func : callable
+        A function to call at the start signal from the sequencer
+        Executes before the instruction list is added to the tree
     """
     
     def __init__(self, *instructions):
         super().__init__()  
         self.finished = False
-        
+
         # Set the forward links on each instruction
         if(len(instructions) > 1):
             instructions[0].add_sequential(instructions[1:])
 
-
         # Put the lead instrucions in the "current" list
         if (len(instructions) > 0):
             self.add_current_instructions(instructions[0:1])
-    
         
+    # def start(self,scene):
+    #     super().start(scene)
+
+    
+    #     # Call the start function
+    #     if self.start_func is not None:
+    #         self.start_func()
     
 class RunParallel(al.InstructionTree):
     """Sets a tuple of instructions to execute in parallel.
@@ -261,7 +284,50 @@ class SlideAttribute(SetAttribute):
         ratio = timing.alpha
         return self.start_value+diff*ratio
 
+
+class FollowFunction(SetAttribute):
+    """Attach the output of a function f(t) to an attribute of an AnObject
+
+    Parameters
+    ----------
+    key : AnObject or string
+        The ID of the target AnObject
+
+    attribute: string
+        The name of the target attribute
+
+    func: callable
+        Function to attach
+        
+    start_param : float
+        The starting parameter for the function
+        
+    end_param : float
+        The ending parameter to the function 
+
+    duration: optional, float
+        The amount of time in seconds over which to follow the function
+        default: 0.0
+    """
     
+    def __init__(self,key,attribute,func,start_param, end_param, duration):
+
+        self.func=func
+        super().__init__(key,
+                         attribute,
+                         self._iliketomoveitmoveit,
+                         duration=duration)
+        self.start_param = start_param
+        self.end_param = end_param
+    
+    def _iliketomoveitmoveit(self,time,timing):
+        param = self.start_param + timing.alpha*(self.end_param-
+                                                 self.start_param)
+
+        return self.func(param)
+        
+        
+
 class Transform(al.Instruction):
     """Smoothly Transform one BezierAnObject into another
 

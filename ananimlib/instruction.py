@@ -167,7 +167,10 @@ class InstructionTree(Instruction):
         self._current_instructions = []
         self.add_current_instructions(initial_sequence)
         self.add_sequential(next_instructions)
+        self.started = False
         self.finished = False
+        
+        self.new_instructions = []
 
     @property
     def current_instructions(self):
@@ -182,16 +185,28 @@ class InstructionTree(Instruction):
             The set of instructions to execute on the next call to update
         
         """   
-        if (len(instructions) > 0):
-            self._current_instructions.extend(instructions)
+#        if (len(instructions) > 0):
+            # if self.started:
+            #     self.new_instructions.extend(instructions)
+            # else:
+        self._current_instructions.extend(instructions)
+        self.finished=False
 
     def start(self,scene):
         """Send start signal to the leading instructions"""
         for inst in self._current_instructions:
                 inst.start(scene)
+        self.started = True
 
     def update(self,scene,dt):
         """Execute all currently active instructions"""
+        
+        if len(self.new_instructions) > 0:
+            for inst in self.new_instructions:
+                inst.start(scene)
+            self._current_instructions.extend(self.new_instructions)
+            self.new_instructions = []
+        
         dtUsed, self._current_instructions = self._update(
             scene, self._current_instructions, dt)  
         if len(self._current_instructions) == 0:

@@ -241,7 +241,7 @@ class BezierRender(CairoRender):
             cmat = context.get_matrix()
             if np.abs(cmat.xx) != np.abs(cmat.yy):
                 context.save()
-                cmat.xx=np.abs(cmat.yy)*np.sign(cmat.xx)
+                cmat.yy=np.abs(cmat.xx)*np.sign(cmat.xx)
                 context.set_matrix(cmat)
                 restore_mat = True
             else:
@@ -278,6 +278,9 @@ class Pen():
     
     fill_opacity : float
         The fill opacity
+        
+    opacity : float
+        Overall opacity modifier.  Scales stroke and fill opacities
     """
 
     def __init__(self, stroke_color="#FFFFFF",
@@ -285,15 +288,17 @@ class Pen():
                        stroke_width=1.0,
                        fill_color="#FFFFFF",
                        fill_opacity=0.0,
-                       fill_pattern=None):
+                       fill_pattern=None,
+                       opacity=1.0):
 
         if al._default_pen is None:
-            self.stroke_color    = stroke_color
-            self.stroke_opacity  = stroke_opacity
-            self.stroke_width    = stroke_width
-            self.fill_color      = fill_color
-            self.fill_opacity    = fill_opacity
-            self.fill_pattern    = fill_pattern
+            self.stroke_color     = stroke_color
+            self._stroke_opacity  = stroke_opacity
+            self.stroke_width     = stroke_width
+            self.fill_color       = fill_color
+            self._fill_opacity    = fill_opacity
+            self.fill_pattern     = fill_pattern
+            self._opacity         = opacity
         else : 
             self.stroke_color    = al._default_pen.stroke_color
             self.stroke_opacity  = al._default_pen.stroke_opacity
@@ -301,6 +306,31 @@ class Pen():
             self.fill_color      = al._default_pen.fill_color
             self.fill_opacity    = al._default_pen.fill_opacity
             self.fill_pattern    = al._default_pen.fill_pattern
+            self._opacity         = al._default_pen.opacity
+
+    @property
+    def opacity(self):
+        return self._opacity
+    
+    @opacity.setter
+    def opacity(self,other):
+        self._opacity = other
+
+    @property
+    def fill_opacity(self):
+        return self._fill_opacity*self.opacity
+    
+    @fill_opacity.setter
+    def fill_opacity(self,other):
+        self._fill_opacity = other
+
+    @property
+    def stroke_opacity(self):
+        return self._stroke_opacity*self.opacity
+    
+    @stroke_opacity.setter
+    def stroke_opacity(self,other):
+        self._stroke_opacity = other
 
     @property
     def stroke_color(self):

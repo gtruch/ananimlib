@@ -62,7 +62,7 @@ class Backend():
         
         
     def save_frame(self,fname,frame_number=0):
-        pass
+        Image.fromarray(self.frames[frame_number]).save(fname)
     
     def save_mp4(self,fname):
         """Save the animation as an mp4"""

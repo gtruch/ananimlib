@@ -12,6 +12,114 @@ import ananimlib as al
 import copy as cp
 import numpy as np
 
+class Dimension(al.CompositeAnObject):    
+    '''A marker for showing length on a digram
+    
+    Attributes
+    ----------
+    label : String
+        The text to show in the dimension marker
+        
+    start : Vector
+        The starting point (left tip)
+        
+    end : Vector
+        The ending point (right tip)
+    '''
+    
+    def __init__(self,label,start,end):
+        super().__init__()
+        
+        self._start = al.Vector(start)
+        self._end   = al.Vector(end)        
+        self.label  = label
+        self._label_scale = 1.0
+        self._build()
+                
+    @property
+    def label_scale(self):
+        return self._label_scale
+    
+    @label_scale.setter
+    def label_scale(self,scale):
+        self._label_scale=scale
+        self._build()
+
+    @property
+    def start(self):
+        return self._start
+    
+    @start.setter
+    def start(self,other):
+        self._start = al.Vector(other)
+        self._build()
+        
+    @property
+    def end(self):
+        return self._end
+    
+    @end.setter
+    def end(self,other):
+        self._end = al.Vector(other)
+        self._build()
+
+    @property 
+    def length(self):
+        return (self.end-self.start).mag
+    
+    @length.setter
+    def length(self,other):
+        disp = self.end-self.start
+        disp.mag = other
+        self.end = self.start+disp
+        self._build()
+        
+    @property        
+    def opacity(self):
+        return self._opacity
+    
+    @opacity.setter
+    def opacity(self, other):
+        self._opacity = other
+        self.set_attributes('opacity', other)
+        
+
+    def _build(self):
+            self.clear()        
+            self.position = [0,0]
+
+            start = self.external2internal(cp.copy(self.start))
+            end   = self.external2internal(cp.copy(self.end))
+            label = self.label
+    
+            
+            length = (end-start).mag
+            
+            self.label_ob = al.TexMath(label)
+            self.label_ob.scale = self._label_scale
+            self.label_ob.position = [length/2,0]
+            bb = self.label_ob.internal2external(self.label_ob.bounding_box)
+#            bb = self.label_ob.bounding_box
+            label_width = bb[1,0]-bb[0,0]
+            label_height = bb[1,1]-bb[0,1]
+            
+                    
+            self.left_arrow  = al.Arrow([length/2-label_width/2,0], [0,0])
+            self.right_arrow = al.Arrow([length/2+label_width/2,0], [length,0])
+            
+            self.left_limit  = al.Line([0,-label_height/2], [0,label_height/2])
+            self.right_limit = al.Line([length,-label_height/2], 
+                                       [length,label_height/2])
+            
+            self.add_anobject(self.left_arrow, update_transform=False)
+            self.add_anobject(self.right_arrow, update_transform=False)
+            self.add_anobject(self.label_ob, update_transform=False)
+            self.add_anobject(self.left_limit, update_transform=False)        
+            self.add_anobject(self.right_limit, update_transform=False)
+            
+            self.about_left()
+            self.position = self.internal2external(start)
+            self.rotation_angle = (end-start).theta
 
 class Circle(al.BezierAnObject):
     """A Circle
@@ -148,10 +256,8 @@ class Arrow(al.CompositeAnObject):
 
     Attributes
     ----------
-    start, end : Vector
-        The start and end points of the arrow.
-        Start is the tail, end is the head.
-
+    tail_pos, head_pos : Vector
+        The coordinates of the tail and tip of the arrow.
 
     pen, head_pen : optional Pen
         The pen used to draw the arrow

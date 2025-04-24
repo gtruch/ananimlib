@@ -10,6 +10,19 @@ import ananimlib as al
 import numpy     as np
 import copy      as cp
 
+
+
+def Fade(key,end_opacity=0.0,duration=0.0):
+    return al.SlideAttribute(key       = key, 
+                             attribute = 'opacity', 
+                             end_value = end_opacity, 
+                             duration  = duration)
+
+def SetOpacity(key,opacity):
+    return al.SetAttribute(key, "opacity", opacity)
+
+
+
 class AddAnObject(al.Instruction):
     """Add a anobject to the scene.
 
@@ -23,11 +36,13 @@ class AddAnObject(al.Instruction):
 
     """
 
-    def __init__(self,anobject,key=None):
+    def __init__(self,anobject,key=None,path=None,update_transform=True):
 
         self.anobject=anobject
         self.key = key
         self.finished = False
+        self.path = path
+        self.update_transform = update_transform
         super().__init__()
 
     def update(self,scene,dt):
@@ -36,7 +51,8 @@ class AddAnObject(al.Instruction):
         if callable(self.anobject):
             self.anobject=self.anobject()
 
-        scene.add_anobject(self.anobject,self.key)
+        scene.add_anobject(self.anobject,self.key,path=self.path,
+                           update_transform=self.update_transform)
         self.finished = True
 
         # This operation uses no time
@@ -51,14 +67,15 @@ class RemoveAnObject(al.Instruction):
         The name of the anobject to remove
     """
 
-    def __init__(self,key):
+    def __init__(self,key,path=None):
         self.key = key
         self.finished = False
+        self.path=path
         super().__init__()
 
     def update(self,scene,dt):
         """Remove the anobject."""
-        scene.remove_anobject(self.key)
+        scene.remove_anobject(self.key,path = self.path)
         self.finished = True
 
         # This operation uses no time
@@ -89,6 +106,8 @@ class Wait(al.Instruction):
             self.finished = True
 
         return self.timing.time_used
+
+
 
 class MoveTo(al.SlideAttribute):
     """Absolute Move of a anobject to a new spot in the Scene.
@@ -508,12 +527,12 @@ class FollowPath(al.SetAttribute):
         A PolyBezier curve defining the path
 
     end_points : iterable
-        The starting and ending point on the Bezier curve
+        The starting and ending normalized Bezier parameters      
 
     duration : float
         The number of seconds the trip should take
     """
-    def __init__(self,key,path,duration,end_points=None,transfer_func=al.linear):
+    def __init__(self,key,path,end_points=None,duration=0.1, transfer_func=al.linear):
         self.key      = key
         self.path     = path
         self.duration = duration
@@ -762,16 +781,16 @@ class DrawText(al.InstructionTree):
         pens = []   # Store the original pen.
 
         # Turn all of the characters off
-        for sym in mob.data.keys():
+        for sym in mob.keys:
 
             # Save the orginal Pen
-            pens.append(cp.deepcopy(mob.data[sym].renderer.pen))
+            pens.append(cp.deepcopy(mob.anobjects[sym].renderer.pen))
 
             seq.append(al.SetAttribute(kkey+[sym],'stroke_opacity',0.0))
             seq.append(al.SetAttribute(kkey+[sym],'fill_opacity',0.0))
 
         # Draw and fill each character
-        for sym,pen in zip(mob.data.keys(),pens):
+        for sym,pen in zip(mob.keys,pens):
             seq.append(al.SetAttribute(kkey+[sym],'stroke_opacity',1.0))
             seq.append(Draw(kkey+[sym],duration=dt))
             seq.append(al.SetAttribute(kkey+[sym],'stroke_opacity',

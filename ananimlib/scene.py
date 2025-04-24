@@ -10,7 +10,6 @@ class Scene(al.CompositeAnObject):
         """
         super().__init__()
 
-        # Dictionary of anobjects currently in the scene
         self.time = 0.0         # Current animation time
         self.camera = camera
         self.frame_changed = False

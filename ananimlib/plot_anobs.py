@@ -94,24 +94,6 @@ class CoordGrid(al.CompositeAnObject):
         self.position = [0,0]
         self._build()
             
-    @property
-    def opacity(self):
-        return self._opacity
-
-    @opacity.setter
-    def opacity(self,value):
-        self._opacity=value
-        self.get_anobject('major').stroke_opacity   = (self._opacity*
-                                                      self._major_opacity)
-        self.get_anobject('minor').stroke_opacity   = (self._opacity*
-                                                      self._minor_opacity)
-        self.get_anobject('outline').stroke_opacity = self._opacity
-        self.get_anobject('axis').stroke_opacity    = self._opacity
-
-        for label in self.text_labels:
-            self.get_anobject(label).opacity = self._opacity
-            
-            
     def _build(self):
         
         self.clear()

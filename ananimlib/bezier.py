@@ -154,7 +154,7 @@ class PolyBezier():
     
 
     def B(self,t):
-        """Calcuate the coordinates of the curve
+        """Calcuate the coordinates of the curve 
         
         Parameters
         ----------
@@ -183,7 +183,7 @@ class PolyBezier():
         return self[seg].B(t)
 
     def T(self,p,param=0,niter=25):
-        """Get the value of t the chosen coordinate.
+        """Get the value of t at the chosen coordinate.
 
         Behavior is undefined if the curve is not singular in the 
         chosen first coordinate.
@@ -234,9 +234,37 @@ class PolyBezier():
         return self[seg].Bdprime(t)
 
     def D(self,t):
-
+        
         seg,tseg = self.find_segment(t)
         return self[seg].D(np.round(tseg,6))
+
+    def inverse_D(self,p,param=0,niter=25):
+        """Get the value of d at the chosen coordinate.
+
+        Behavior is undefined if the curve is not singular in the 
+        chosen first coordinate.
+        """
+
+        tl = 0.0
+        tr = 1.0
+        Bl = self.B(tl)
+        Br = self.B(tr)
+
+        for indx in np.arange(niter):
+            tm = 0.5*(tr+tl)
+            Bm = self.B(tm)
+
+            if (Bm[param]-p)*(Bl[param]-p) > 0:
+                tl = tm
+                Bl = Bm
+            else:
+                tr = tm
+                Br = Bm
+
+        return 0.5*(tr+tl)
+
+
+
 
     def Dprime(self,t):
 
@@ -983,6 +1011,32 @@ class BezierCurve():
 
         # Call B to get the coordinates
         return self.B(t)
+
+    def inverse_D(self,p,param=0,niter=25):
+        """Get the value of d at the chosen coordinate.
+
+        Behavior is undefined if the curve is not singular in the 
+        chosen first coordinate.
+        """
+
+        tl = 0.0
+        tr = 1.0
+        Bl = self.B(tl)
+        Br = self.B(tr)
+
+        for indx in np.arange(niter):
+            tm = 0.5*(tr+tl)
+            Bm = self.B(tm)
+
+            if (Bm[param]-p)*(Bl[param]-p) > 0:
+                tl = tm
+                Bl = Bm
+            else:
+                tr = tm
+                Br = Bm
+
+        return 0.5*(tr+tl)
+        
 
     def Dprime(self,d):
 

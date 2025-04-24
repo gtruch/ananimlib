@@ -43,18 +43,18 @@ class Text(al.SVGAnObject):
         
     
 
-    @property
-    def opacity(self):
-        return self._opacity
+    # @property
+    # def opacity(self):
+    #     return self._opacity
 
-    @opacity.setter
-    def opacity(self, value):
-        self._opacity=value
-        for sym in self.keys:
-            self.get_anobject(sym).fill_opacity = \
-                    self._opacity*self._fill_opacity
-            self.get_anobject(sym).stroke_opacity = \
-                    self._opacity*self._stroke_opacity
+    # @opacity.setter
+    # def opacity(self, value):
+    #     self._opacity=value
+    #     for sym in self.keys:
+    #         self.get_anobject(sym).fill_opacity = \
+    #                 self._opacity*self._fill_opacity
+    #         self.get_anobject(sym).stroke_opacity = \
+    #                 self._opacity*self._stroke_opacity
 
     # def get_anobject(self, key):
         
@@ -152,7 +152,7 @@ class Text(al.SVGAnObject):
                 "latex",
                 "-interaction=batchmode",
                 "-halt-on-error",
-                "-output-directory=\"{}\"".format(base),
+                "-output-directory={}".format(base),
                 "\"{}\"".format(file)
                 # ">",
                 # os.devnull
@@ -165,7 +165,7 @@ class Text(al.SVGAnObject):
                 log_file = tex_file.replace(".tex", ".log")
                 # print(os.getcwd())
                 raise Exception(
-                    f'{cp.stdout}' +
+                    f'{cp.stdout}' + f'{cp.stderr}'
                     "Latex error converting to dvi. " +
                     "See log output above or the log file: %s" % log_file)
         return os.path.join(base,result)

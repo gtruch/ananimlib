@@ -31,7 +31,7 @@ class AnEngine():
         self.reset_scene()
 
         # Render frames by default (Rather than just executing the instructions)
-        self.render=True
+#        self.render=True
 
     def run(self, *instructions):
         """Execute the instructions and render the results

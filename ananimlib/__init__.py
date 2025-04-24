@@ -15,7 +15,7 @@ from .scene import Scene
 
 # Commonly used animation objects
 from .common_anobs import Arc, Arrow, ArrowHead, CrossHair, Circle, Dot, \
-                          DoubleArrow, Grid, Line, Rectangle
+                          DoubleArrow, Grid, Line, Rectangle, Dimension
 
 # LaTex related animation objects
 from .tex_anobject import Text, TexMath, Number, TextBox
@@ -27,8 +27,9 @@ from .plot_anobs import CoordAxis, CoordGrid, PlotPoints, PlotMark
 from .instruction import Instruction, InstructionTree
 
 # Core Instructions upon which most other instructions are based. 
-from .core_instructions import RunParallel, RunSequential, \
-                               SetAttribute, SlideAttribute, Timing
+from .core_instructions import ExecuteFunction, RunParallel, RunSequential, \
+                               SetAttribute, SlideAttribute, \
+                               FollowFunction, Timing, Transform
 
 # Basic set of instructions
 from .basic_instructions import AddAnObject, RemoveAnObject, Move, MoveTo, \
@@ -36,7 +37,8 @@ from .basic_instructions import AddAnObject, RemoveAnObject, Move, MoveTo, \
                                 AboutRight, AboutUpper, AboutLower, \
                                 AdjustAboutPoint, SetAboutPoint, Swap, Draw, \
                                 DrawText, MoveCamera, ZoomCamera, Emphasize, \
-                                FollowPath, AlignWithPath, GrowArrow, Wait
+                                FollowPath, AlignWithPath, GrowArrow, Wait, \
+                                Fade, SetOpacity
 
 # Search algorithms
 from .search import Bisect, Newton
@@ -54,12 +56,16 @@ from .camera import Camera
 # Backend to manipulate the video stream
 from .backend import Backend
 
+# Experimental
+from .experimental_anobjects import ParametricFunction, PlotMarker, \
+                                    CoordGrid2, Grid2, PlotGrid \
+                                    
 # defaults for control of the renderer
 _defaults = {
     'width'      : 16,      
     'ar'         : 16/9, 
     'frame_rate' : 60, 
-    'DPI'        : 120,
+    'DPI'        : 100,
     'tex_dir'    : './tex'
 }
 
@@ -69,6 +75,7 @@ _default_pen = None
 # Instantiate a default animation engine and provide the Animate method
 engine = AnEngine()
 Animate = engine.run            # Animate is an alias for AnEngine.run
+Config = engine.config_camera
 
 # Create alias for engine.play_movie
 play_movie = engine.play_movie

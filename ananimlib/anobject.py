@@ -56,7 +56,7 @@ class AnObject():
         distances in the internal coordinate system
 
     clip : PolyBezier
-        A PolyBezier path defining a clip region.
+        A closed PolyBezier path defining a clip region.
     """
 
     def __init__(self,data,renderer,clip=None):
@@ -226,19 +226,28 @@ class BezierAnObject(AnObject):
 
     def __init__(self,path=None,pen=None):
 
-        if path is None:
-            path = al.PolyBezier()
-
-        super().__init__(path,al.BezierRender(pen))
+        
+        self.path = path
+        if self.path is None:
+            self.path = al.PolyBezier()
+        super().__init__(self.path,al.BezierRender(pen))
         
     def connect_linear(self,points):
-        self.data.connect_linear(points)
+        self.path.connect_linear(points)
 
     def connect_smooth(self,points):
-        self.data.connect_smooth(points)
+        self.path.connect_smooth(points)
         
     def clear(self):
-        self.data = al.PolyBezier()
+        self.path = al.PolyBezier()
+
+    @property
+    def path(self):
+        return self.data
+    
+    @path.setter
+    def path(self,newpath):
+        self.data = newpath
 
     @property
     def bounding_box(self):
@@ -291,7 +300,14 @@ class BezierAnObject(AnObject):
     @fill_color.setter
     def fill_color(self, color):
         self.renderer.pen.fill_color = color
-
+        
+    @property
+    def opacity(self):
+        return self.renderer.pen.opacity
+    
+    @opacity.setter
+    def opacity(self,other):
+        self.renderer.pen.opacity = other
 
 class ImageAnObject(AnObject):
     """Animation Object containing a bitmapped image
@@ -314,17 +330,22 @@ class ImageAnObject(AnObject):
     def __init__(self,filename,scale_height=None):
 
         # Open the image file and pack it into a container
+#        image = Image.open(filename)
         image = Image.open(filename).convert('RGBA')
         
         self.pw, self.ph = image.size
         
         self.image = np.array(image)
+        
+#        self.frames.append(cp.copy(np.transpose(frame[:,:,:3],[1,0,2])))
+        
+        self.image = np.ascontiguousarray(self.image[:,:,[2,1,0,3]])
         self._opacity = 1.0
         self._alpha = cp.copy(self.image[:,:,3])
 
         data = ImageContainer(
             cairo.ImageSurface.create_for_data(
-                bytearray(image.tobytes('raw', 'BGRa')),
+                bytearray(image.tobytes('raw')),
                 cairo.FORMAT_ARGB32,
                 self.pw,self.ph))
 
@@ -345,6 +366,7 @@ class ImageAnObject(AnObject):
     def invert(self):
         """Invert the image, top to bottom"""
         self.image = np.array(np.flip(self.image,axis=0))
+        self._alpha = cp.copy(self.image[:,:,3])
         self.data = ImageContainer(
             cairo.ImageSurface.create_for_data(
                 self.image,
@@ -452,15 +474,16 @@ class CompositeAnObject(AnObject):
     def __init__(self,anobjects=None,names=None):
 
         super().__init__({}, al.CompositeRender())
-
-        self.clear()
+    
+        self.anobjects  = {}      # a dictionary with the anobjects.
+        self.keys       = []           # a simple list of keys to remember the 
+                                  # insertion order (z-order)
+        self.key_lookup = {}     # Look up the key using the anobject's object id
+        self.flags      = {}
         
+        self._opacity = 1.0
 
-        # self.anobjects = {}      # a dictionary with the anobjects.
-        # self.keys = []           # a simple list of keys to remember the 
-        #                          # insertion order (z-order)
-        # self.key_lookup = {}     # Look up the key using the anobject's object id
-        
+
         if anobjects is not None:
 
             # If no names were passed, use the object id
@@ -472,12 +495,20 @@ class CompositeAnObject(AnObject):
 
 
     def clear(self):
-        self.anobjects = {}      # a dictionary with the anobjects.
-        self.keys = []           # a simple list of keys to remember the 
-                                 # insertion order (z-order)
-        self.key_lookup = {}     # Look up the key using the anobject's object id
+        keys = cp.copy(self.keys)
+        ret = [self.remove_anobject(key) for key in keys]
+        return ret
+        # self.anobjects = {}      # a dictionary with the anobjects.
+        # self.keys = []           # a simple list of keys to remember the 
+        #                          # insertion order (z-order)
+        # self.key_lookup = {}     # Look up the key using the anobject's object id
+        # self.flags = {}
 
-    def add_anobject(self, anobject, key=None, path=None, update_transform=True):
+    def add_anobject(self, anobject, key=None, path=None, 
+                     update_transform=True, 
+                     update_position=True, 
+                     update_scale=True,
+                     maintain_stroke=False):
         """Add an AnObject to the composite
 
         Parameters
@@ -541,28 +572,153 @@ class CompositeAnObject(AnObject):
                 self.anobjects[key] = anobject      # Main dictionary
                 self.key_lookup[anobject] = key     # Reverse dictionary
                 self.keys.append(key)               # Key list to maintain 
-                                                    #          insertion order
+                                                    # insertion order
+                
+                # Store coordinate transform flags
+                if not update_transform:
+                    update_position = False
+                    update_scale    = False
+                                                    
+                self.flags[key] = { 'update_position' : update_position,
+                                    'update_scale'    : update_scale,
+                                    'maintain_stroke' : maintain_stroke }
                                                     
                 # Fix the transformation matrix
                 if update_transform:
-                    anobject.position -= self.position
-                    anobject.scale /= self.scale
+                    if update_position:
+                        anobject.position -= self.position
+                    if update_scale:
+                        anobject.scale /= self.scale
                     
-                
+                if maintain_stroke: 
+                    anobject.stroke_width /= self.scale[0]
+                    
+                # if hasattr(anobject,'plt_rescale'):
+                #     anobject.plt_rescale()
+                    
+                    
         elif len(path) == 0:                      # ignore empty path
             self.add_anobject(anobject,key)
         else:
             
             # Recursively walk the path
-            next_target = self.get_anobject(path[0])       # Follow forward link
-            next_path   = path[1:]                # Split the path
+            next_target = self.get_anobject(path[0]) # Follow forward link
+            next_path   = path[1:]                   # Split the path
             
-            if len(next_path) == 0:               # Set empty path to None
+            if len(next_path) == 0:                  # Set empty path to None
                 next_path = None
                                 
             # Call the add method of the next target.
             next_target.add_anobject(anobject, key, next_path)
             
+    def remove_anobject(self,key,path=None, update_transform=True):
+        """Remove an animation object from the composite
+        
+        Parameters
+        ----------
+        key : AnObject, int, or str
+            The key to the desired Anobject(s)
+            Depends on the data type of the key: 
+            Anobject - uses the Anobject's object id as a string key
+            int      - used as an index into the array of keys
+            str      - used as a key for internal lookup. (dictionary key)
+        """
+
+        if path is None:
+            rkey = self._fetch_lookup_key(key)
+                    
+            anob = self.anobjects.pop(rkey)  # Remove from main dictionary
+            self.keys.pop(self.keys.index(rkey))       # Remove from key list
+
+            # Put the transformation matrix back
+            self._unscale(rkey,anob)
+            # if update_transform:
+            #     anob.position += self.position
+            #     anob.scale    *= self.scale
+            
+            if isinstance(key,al.AnObject):  # Remove from reverse dictionary
+                self.key_lookup.pop(key)
+                
+            return (anob,rkey,self.flags[rkey])
+
+        elif len(path) == 0:
+            return self.remove_anobject(key,path=None,update_transform=update_transform)
+        else:
+            # Recursively walk the path
+            next_target = self.get_anobject(path[0]) # Follow forward link
+            next_path   = path[1:]                   # Split the path
+            
+            if len(next_path) == 0:                  # Set empty path to None
+                next_path = None
+                                
+            # Call the remove method of the next target.
+            return next_target.remove_anobject(key, next_path,update_transform=update_transform)
+            
+            
+    def _unscale(self,key,anob):
+        '''Remove scale and position transformations from embedded objects
+        
+        Generally called just before 'ungrouping' a composite
+        '''
+                    
+        # call _unscale on the embedded element 
+        # hasattr
+        # if hasattr(anob, "_unscale"):
+        #     anob._unscale()
+                
+        # and adjust the scale and position directly                
+        if self.flags[key]['update_position']:
+            anob.position += self.position
+        if self.flags[key]['update_scale']:
+            anob.scale *= self.scale
+        if self.flags[key]['maintain_stroke']:
+            anob.stroke_width *= self.scale[0]                    
+
+    def _fetch_lookup_key(self, key):
+        """Get the lookup key for the anobject reference 
+
+        Parameters
+        ----------
+        key : iterable, AnObject, Slice, int, or str
+            The key to the desired Anobject(s)
+            Depends on the data type of the key: 
+            Anobject - uses the Anobject's object id as a string key
+            int      - used as an index into the array of keys
+            str      - used as a key for internal lookup. (dictionary key)
+        """
+            
+        rkey = None
+        
+        # Passed key is an AnObject.  Attempt to look up the key.
+        if isinstance(key,al.AnObject):
+            
+            if key in self.key_lookup:
+                rkey = self.key_lookup[key]
+            else:                 
+                raise KeyError(f"AnObject of type {type(key)} passed as a key but"
+                                 " that AnObject is not in this Composite.")
+
+        # Passed key is a string, let's see what we have on file...
+        if isinstance(key,str):
+            
+            if key in self.anobjects.keys():
+                rkey = key 
+            else:
+                raise ValueError(f"No AnObject listed with key='{key}'")
+
+        # Passed key is an int.  Return the keyth key in the key list
+        elif isinstance(key,int):
+            
+            if key < len(self.keys):
+                rkey = self.keys[key]
+            else:
+                raise ValueError(f"Requested AnObject {key} but there" +
+                                 f" are only {len(self.keys)} AnObjects" +
+                                 f" in this Composite")
+
+        return rkey
+
+
     def get_anobject(self,key):
         """Get a reference to an AnObject that's in the composite
 
@@ -575,7 +731,7 @@ class CompositeAnObject(AnObject):
             Anobject - uses the Anobject's object id as a string key
             slice    - Returns a CompositeAnObject containing a copy of 
             the AnObjects in the slice
-            int      - used a an index into the array of AnObjects
+            int      - used as an index into the array of AnObjects
             str      - used as a key for internal lookup. (dictionary key)
         """
              
@@ -658,70 +814,17 @@ class CompositeAnObject(AnObject):
 
         return np.array([box.min(axis=0),box.max(axis=0)])
 
-    # def add_anobject(self,anobject,name=None,preserve_transform=True):
-    #     """Add an animation object to the collection
-
-    #     Parameters
-    #     ----------
-    #     anobject : AnObject
-    #         An instance of a class derived from AnObject
-
-    #     name : str
-    #         The name of the anobject for retrieval and manipulation
-            
-    #     preserve_transform : optional boolean
-    #         The coordinates of a anobject (the position, scale, and rotation) 
-    #         are representd by an affine transformation which is applied just
-    #         prior to rendering.  A CompositeAnObject has its own transformation 
-    #         which is applied before rendering any sub-anobjects.  
-        
-    #         When preserve_transform is True, the added anobject's coordinates 
-    #         (position, scale, and rotation) are modified by applying the 
-    #         inverse of the CompositeAnObject's transformation effectively 
-    #         undoing it so that its final rendered position on the canvas is the 
-    #         same as it would have been before the call to add_anobject.  
-    #         This modification happens only once at the time that add_anobject 
-    #         is called. 
-            
-    #         When false, the added anobject's coordinates will NOT be modified 
-    #         which, depending on state of the CompositeAnObject's transformation, 
-    #         will could cause its rendered appearance to change.  
-    #     """
-
-    #     if preserve_transform:
-    #         # Set position to internal coordinates
-    #         anobject.position = self.external2internal(anobject.position)
-
-    #         # Change the scale to counter the composite scale
-    #         anobject.scale = anobject.scale*self.scale**-1
-
-    #     # # Change the rotation to counter the composite rotation
-    #     # anobject.rotation_angle = anobject.rotation_angle self.rotation_angle*-1
-
-    #     self.data.add_anobject(anobject,name)
-
-    # def remove_anobject(self,name):
-    #     """Remove a anobject from the composite.  Synonym for pop."""
-        
-    #     self.data.pop(name)
-        
-
-    # def clear(self):
-    #     """Remove all anobjects from the composite"""
-        
-    #     self.data.clear()
-
-    # def get_anobject(self,name):
-    #     """Fetch a anobject from the group.  Synonym for __getitem__
-
-    #     Parameters
-    #     ----------
-    #     name : str
-    #         The name of the anobject
-    #     """
-
-    #     return self[name]
     
+    @property
+    def opacity(self):
+        return self._opacity
+    
+    @opacity.setter
+    def opacity(self,other):
+        self._opacity=other
+        self.set_attributes('opacity', other)
+
+
     def set_attributes(self,attribute,value,keys=None):
         """Set the same attribute on each of the of selected sub-anobjects 
         
@@ -739,10 +842,10 @@ class CompositeAnObject(AnObject):
         """
 
         if keys is None:
-            keys = self.data.keys
+            keys = self.keys
 
         for key in keys:
-            mb = self.data.get_anobject(key)
+            mb = self.get_anobject(key)
             if hasattr(mb,attribute):
                 setattr(mb,attribute,value)
 
@@ -1094,7 +1197,7 @@ class SVGAnObject(CompositeAnObject):
             y = float(node.getAttribute('y'))*-1*self.rescale
             height = float(node.getAttribute('height'))*self.rescale
             width = float(node.getAttribute('width'))*self.rescale
-            path.connectLinear([[0.0,0.0],
+            path.connect_linear([[0.0,0.0],
                                 [0.0,height],
                                 [width,height],
                                 [width,0.0],
